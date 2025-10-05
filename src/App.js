@@ -384,15 +384,81 @@ const DLPWorksSite = () => {
     </button>
   );
 
-  const AdminNews = () => (
+const AdminNews = () => {
+  // États pour le formulaire (nouveaux, locaux à cette page)
+  const [newTitle, setNewTitle] = useState('');
+  const [newDate, setNewDate] = useState('');
+  const [newTweet, setNewTweet] = useState('');
+  const [newContent, setNewContent] = useState('');
+
+  // Fonction pour ajouter une actualité (utilise le setter !)
+  const addNews = () => {
+    if (!newTitle || !newContent) return; // Validation basique
+
+    const newItem = {
+      id: Date.now(), // ID unique simple (basé sur timestamp)
+      title: newTitle,
+      date: newDate || new Date().toISOString().split('T')[0], // Date du jour si vide
+      tweet: newTweet,
+      content: newContent
+    };
+
+    // Utilisation du setter : met à jour l'état avec le nouveau tableau
+    setNews([...news, newItem]); // ...news pour cloner et ajouter
+
+    // Reset du formulaire
+    setNewTitle('');
+    setNewDate('');
+    setNewTweet('');
+    setNewContent('');
+    alert('Actualité ajoutée !');
+  };
+
+  // ... le reste du JSX existant
+
+  return (
     <div className="px-4 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-4xl font-bold text-white">Gestion des Actualités</h1>
-        <button className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg flex items-center hover:shadow-lg transition-all">
-          <Plus size={20} className="mr-2" />
-          Nouvelle actualité
-        </button>
+        {/* Formulaire d'ajout */}
+        <div className="bg-gray-800 p-4 rounded-lg space-y-4">
+          <input
+            type="text"
+            placeholder="Titre"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="date"
+            value={newDate}
+            onChange={(e) => setNewDate(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="url"
+            placeholder="Lien tweet"
+            value={newTweet}
+            onChange={(e) => setNewTweet(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <textarea
+            placeholder="Contenu"
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded h-20"
+          />
+          <button
+            onClick={addNews}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg flex items-center hover:shadow-lg"
+          >
+            <Plus size={20} className="mr-2" />
+            Ajouter
+          </button>
+        </div>
       </div>
+
+      {/* Liste existante des news, avec boutons edit/suppr */}
       <div className="space-y-4">
         {news.map(item => (
           <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-xl flex justify-between items-center">
@@ -401,10 +467,15 @@ const DLPWorksSite = () => {
               <p className="text-gray-400">{item.date}</p>
             </div>
             <div className="flex space-x-2">
-              <button className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors">
+              {/* Exemple d'édition (fonction similaire à addNews) */}
+              <button className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black">
                 <Edit size={20} />
               </button>
-              <button className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors">
+              {/* Exemple de suppression */}
+              <button
+                onClick={() => setNews(news.filter(n => n.id !== item.id))} // Utilise le setter pour filtrer/supprimer
+                className="p-2 bg-gray-800 rounded hover:bg-red-600"
+              >
                 <Trash2 size={20} />
               </button>
             </div>
@@ -413,6 +484,7 @@ const DLPWorksSite = () => {
       </div>
     </div>
   );
+};
 
   return (
     <div className="min-h-screen bg-black text-white">
