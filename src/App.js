@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, Twitter, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, LogOut, Edit, Trash2, Plus, Eye } from 'lucide-react';
+import { Menu, X, Twitter, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, LogOut, Edit, Trash2, Plus } from 'lucide-react';
 
 const DLPWorksSite = () => {
   const [currentPage, setCurrentPage] = useState('home');
@@ -119,10 +119,10 @@ const DLPWorksSite = () => {
           <a href="https://x.com/DLPWorks" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform">
             <Twitter size={32} className="text-white hover:text-yellow-400" />
           </a>
-          <a href="#" className="transform hover:scale-110 transition-transform">
+          <a href="https://www.facebook.com/Dlp.works" className="transform hover:scale-110 transition-transform">
             <Facebook size={32} className="text-white hover:text-yellow-400" />
           </a>
-          <a href="#" className="transform hover:scale-110 transition-transform">
+          <a href="https://www.instagram.com/dlp.works/" className="transform hover:scale-110 transition-transform">
             <Instagram size={32} className="text-white hover:text-yellow-400" />
           </a>
         </div>
