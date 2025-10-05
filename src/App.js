@@ -358,17 +358,17 @@ const DLPWorksSite = () => {
           onClick={() => setCurrentPage('admin-news')}
         />
         <AdminCard
-          icon={<Camera size={32} />}
-          title="Vues Aériennes"
-          description="Gérer les photos aériennes"
-          onClick={() => setCurrentPage('admin-aerial')}
-        />
-        <AdminCard
-          icon={<FileText size={32} />}
-          title="Articles"
-          description="Rédiger et gérer les articles"
-          onClick={() => setCurrentPage('admin-articles')}
-        />
+		  icon={<Camera size={32} />}
+		  title="Vues Aériennes"
+		  description="Gérer les photos aériennes"
+		  onClick={() => setCurrentPage('admin-aerial')}  // Ajoute cette ligne
+		/>
+		<AdminCard
+		  icon={<FileText size={32} />}
+		  title="Articles"
+		  description="Rédiger et gérer les articles"
+		  onClick={() => setCurrentPage('admin-articles')}  // Ajoute cette ligne
+		/>
       </div>
     </div>
   );
@@ -486,6 +486,193 @@ const AdminNews = () => {
   );
 };
 
+const AdminAerial = () => {
+  // États pour le formulaire d'ajout
+  const [newTitle, setNewTitle] = useState('');
+  const [newDate, setNewDate] = useState('');
+  const [newImage, setNewImage] = useState(''); // URL d'image (Unsplash ou locale)
+
+  // Fonction pour ajouter une vue aérienne
+  const addAerial = () => {
+    if (!newTitle || !newImage) return; // Validation
+
+    const newItem = {
+      id: Date.now(),
+      title: newTitle,
+      date: newDate || new Date().toISOString().split('T')[0],
+      image: newImage
+    };
+
+    setAerialViews([...aerialViews, newItem]);
+
+    // Reset formulaire
+    setNewTitle('');
+    setNewDate('');
+    setNewImage('');
+    alert('Vue aérienne ajoutée !');
+  };
+
+  // Fonction pour supprimer
+  const deleteAerial = (id) => {
+    setAerialViews(aerialViews.filter(item => item.id !== id));
+  };
+
+  return (
+    <div className="px-4 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-white">Gestion des Vues Aériennes</h1>
+        {/* Formulaire d'ajout */}
+        <div className="bg-gray-800 p-4 rounded-lg space-y-4 w-80">
+          <input
+            type="text"
+            placeholder="Titre"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="date"
+            value={newDate}
+            onChange={(e) => setNewDate(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="url"
+            placeholder="URL image (ex: Unsplash)"
+            value={newImage}
+            onChange={(e) => setNewImage(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <button
+            onClick={addAerial}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg flex items-center hover:shadow-lg w-full justify-center"
+          >
+            <Plus size={20} className="mr-2" />
+            Ajouter
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {aerialViews.map(item => (
+          <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-xl flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-bold text-yellow-400">{item.title}</h3>
+              <p className="text-gray-400">{item.date}</p>
+              <img src={item.image} alt={item.title} className="w-32 h-20 object-cover rounded mt-2" />
+            </div>
+            <button
+              onClick={() => deleteAerial(item.id)}
+              className="p-2 bg-gray-800 rounded hover:bg-red-600"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
+const AdminArticles = () => {
+  // États pour le formulaire d'ajout
+  const [newTitle, setNewTitle] = useState('');
+  const [newDate, setNewDate] = useState('');
+  const [newContent, setNewContent] = useState('');
+  const [newImage, setNewImage] = useState('');
+
+  // Fonction pour ajouter un article
+  const addArticle = () => {
+    if (!newTitle || !newContent) return;
+
+    const newItem = {
+      id: Date.now(),
+      title: newTitle,
+      date: newDate || new Date().toISOString().split('T')[0],
+      content: newContent,
+      image: newImage
+    };
+
+    setArticles([...articles, newItem]);
+
+    // Reset formulaire
+    setNewTitle('');
+    setNewDate('');
+    setNewContent('');
+    setNewImage('');
+    alert('Article ajouté !');
+  };
+
+  // Fonction pour supprimer
+  const deleteArticle = (id) => {
+    setArticles(articles.filter(item => item.id !== id));
+  };
+
+  return (
+    <div className="px-4 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-bold text-white">Gestion des Articles</h1>
+        {/* Formulaire d'ajout */}
+        <div className="bg-gray-800 p-4 rounded-lg space-y-4 w-80">
+          <input
+            type="text"
+            placeholder="Titre"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="date"
+            value={newDate}
+            onChange={(e) => setNewDate(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <input
+            type="url"
+            placeholder="URL image"
+            value={newImage}
+            onChange={(e) => setNewImage(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+          />
+          <textarea
+            placeholder="Contenu"
+            value={newContent}
+            onChange={(e) => setNewContent(e.target.value)}
+            className="w-full px-3 py-2 bg-gray-900 text-white rounded h-20"
+          />
+          <button
+            onClick={addArticle}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-2 rounded-lg flex items-center hover:shadow-lg w-full justify-center"
+          >
+            <Plus size={20} className="mr-2" />
+            Ajouter
+          </button>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        {articles.map(item => (
+          <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-xl flex justify-between items-center">
+            <div>
+              <h3 className="text-xl font-bold text-yellow-400">{item.title}</h3>
+              <p className="text-gray-400">{item.date}</p>
+              <p className="text-gray-300 mb-2">{item.content.substring(0, 100)}...</p>
+              <img src={item.image} alt={item.title} className="w-32 h-20 object-cover rounded mt-2" />
+            </div>
+            <button
+              onClick={() => deleteArticle(item.id)}
+              className="p-2 bg-gray-800 rounded hover:bg-red-600"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
   return (
     <div className="min-h-screen bg-black text-white">
       <NavBar />
@@ -499,6 +686,8 @@ const AdminNews = () => {
         {currentPage === 'login' && !isAdmin && <LoginPage />}
         {currentPage === 'admin-dashboard' && isAdmin && <AdminDashboard />}
         {currentPage === 'admin-news' && isAdmin && <AdminNews />}
+		{currentPage === 'admin-aerial' && isAdmin && <AdminAerial />}
+		{currentPage === 'admin-articles' && isAdmin && <AdminArticles />}
       </main>
       <footer className="bg-black border-t border-gray-800 py-8 text-center text-gray-400">
         <p>&copy; 2025 DLP Works - Communauté de passionnés Disney</p>
