@@ -10,18 +10,18 @@ const DLPWorksSite = () => {
   
   // État pour stocker le contenu (en production, ce serait dans une base de données)
   const [news, setNews] = useState([
-    { id: 1, title: "Nouvelle attraction annoncée", date: "2025-10-01", tweet: "https://x.com/DLPWorks/status/123", content: "Disneyland Paris annonce une nouvelle attraction..." },
-    { id: 2, title: "Rénovation du Château", date: "2025-09-28", tweet: "https://x.com/DLPWorks/status/124", content: "Les travaux de rénovation avancent..." }
+    { id: 1, title: "Nouvelle attraction annoncée", date: "2025-10-01", tweet: "https://x.com/DLPWorks/status/1910969757756449015", content: "Disneyland Paris annonce une nouvelle attraction..." },
+    { id: 2, title: "Rénovation du Château", date: "2025-09-28", tweet: "https://x.com/DLPWorks/status/1721163361692327977", content: "Les travaux de rénovation avancent..." }
   ]);
   
   const [aerialViews, setAerialViews] = useState([
-    { id: 1, title: "Vue du Château", date: "2025-09-30", image: "https://images.unsplash.com/photo-1548013146-72479768bada?w=800" },
-    { id: 2, title: "Avengers Campus", date: "2025-09-25", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" }
+    { id: 1, title: "Vue du Château", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/n033755_2027jun24_world_main-street-usa-castle_2-1_tcm808-270423.jpg?w=1200&f=webp" },
+    { id: 2, title: "Avengers Campus", date: "2025-09-25", image: "https://media.disneylandparis.com/d4th/fr-fr/images/hd16242_2050dec31_world_avengers-campus-key-visual_16-9_tcm808-236755.jpg?w=960" }
   ]);
   
   const [articles, setArticles] = useState([
-    { id: 1, title: "L'histoire de Disneyland Paris", date: "2025-09-20", content: "Depuis son ouverture en 1992...", image: "https://images.unsplash.com/photo-1601970122940-ff0c6dce8f54?w=800" },
-    { id: 2, title: "Les secrets des Imagineers", date: "2025-09-15", content: "Découvrez les coulisses...", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800" }
+    { id: 1, title: "L'histoire de Disneyland Paris", date: "2025-09-20", content: "Depuis son ouverture en 1992...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg" },
+    { id: 2, title: "Les secrets des Imagineers", date: "2025-09-15", content: "Découvrez les coulisses...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg" }
   ]);
 
   const handleLogin = useCallback(() => {
