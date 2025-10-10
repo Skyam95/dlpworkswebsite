@@ -80,7 +80,7 @@ const DLPWorksSite = () => {
  const [news, setNews] = useState([]);
 const [aerialViews, setAerialViews] = useState([]);
 const [articles, setArticles] = useState([]);
-const [loading, setLoading] = useState(true);
+/*const [loading, setLoading] = useState(true); MIS EN COMMENTAIRE CAR NON UTILISE */
 
 // Ajouter juste après les useState
 useEffect(() => {
@@ -120,7 +120,7 @@ useEffect(() => {
   // Fonction de connexion
 	const handleLogin = useCallback(async () => {
 	  try {
-		const { data, error } = await supabase.auth.signInWithPassword({
+		const { , error } = await supabase.auth.signInWithPassword({ /* LIGNE MODIFIEE, variable data supprimée */
 		  email: username,
 		  password: password,
 		});
