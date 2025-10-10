@@ -120,7 +120,7 @@ useEffect(() => {
   // Fonction de connexion
 	const handleLogin = useCallback(async () => {
 	  try {
-		const { , error } = await supabase.auth.signInWithPassword({ /* LIGNE MODIFIEE, variable data supprimée */
+		const { data, error } = await supabase.auth.signInWithPassword({ /* LIGNE MODIFIEE, variable data supprimée */
 		  email: username,
 		  password: password,
 		});
