@@ -4,7 +4,7 @@ import { Menu, X, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, Log
 import { Twitter as XIcon } from 'lucide-react';
 
 // IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
-import { supabase } from './supabaseClient';
+// import { supabase } from './supabaseClient';
 
 // ===== COMPOSANT LOGIN EXTRAIT =====
 const LoginPage = ({ username, setUsername, password, setPassword, onLogin }) => {
@@ -77,65 +77,51 @@ const DLPWorksSite = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   
   // États pour stocker le contenu
- const [news, setNews] = useState([]);
-const [aerialViews, setAerialViews] = useState([]);
-const [articles, setArticles] = useState([]);
-const [loading, setLoading] = useState(true);
-
-// Ajouter juste après les useState
-useEffect(() => {
-  fetchAllData();
-}, []);
-
-	const fetchAllData = async () => {
-	  try {
-		setLoading(true);
-		
-		const { data: newsData } = await supabase
-		  .from('news')
-		  .select('*')
-		  .order('date', { ascending: false });
-		
-		const { data: aerialData } = await supabase
-		  .from('aerial_views')
-		  .select('*')
-		  .order('date', { ascending: false });
-		
-		const { data: articlesData } = await supabase
-		  .from('articles')
-		  .select('*')
-		  .order('date', { ascending: false });
-
-		if (newsData) setNews(newsData);
-		if (aerialData) setAerialViews(aerialData);
-		if (articlesData) setArticles(articlesData);
-		
-	  } catch (error) {
-		console.error('Erreur chargement:', error);
-	  } finally {
-		setLoading(false);
-	  }
-	};
+  const [news, setNews] = useState([
+    { id: 1, title: "Nouvelle attraction annoncée", date: "2025-10-01", tweet: "https://x.com/DLPWorks/status/1910969757756449015", content: "Disneyland Paris annonce une nouvelle attraction..." },
+    { id: 2, title: "Rénovation du Château", date: "2025-09-28", tweet: "https://x.com/DLPWorks/status/1721163361692327977", content: "Les travaux de rénovation avancent..." }
+  ]);
+  
+  const [aerialViews, setAerialViews] = useState([
+    { id: 1, title: "Vue du Château", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/n033755_2027jun24_world_main-street-usa-castle_2-1_tcm808-270423.jpg?w=1200&f=webp" },
+    { id: 2, title: "Avengers Campus", date: "2025-09-25", image: "https://media.disneylandparis.com/d4th/fr-fr/images/hd16242_2050dec31_world_avengers-campus-key-visual_16-9_tcm808-236755.jpg?w=960" }
+  ]);
+  
+  const [articles, setArticles] = useState([
+    { id: 1, title: "L'histoire de Disneyland Paris", date: "2025-09-20", content: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer et de faire rêver des millions de visiteurs.", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer...\n\nContenu complet de l'article ici..." },
+    { id: 2, title: "Les secrets des Imagineers", date: "2025-09-15", content: "Découvrez les coulisses de la création des attractions et des décors féeriques de Disneyland Paris.", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Les Imagineers sont les créateurs de magie...\n\nContenu complet de l'article ici..." }
+  ]);
 
   // Fonction de connexion
-	const handleLogin = useCallback(async () => {
-	  try {
-		const { data, error } = await supabase.auth.signInWithPassword({
-		  email: username,
-		  password: password,
-		});
+  const handleLogin = useCallback(() => {
+    // VERSION SIMPLE (sans Supabase pour le moment)
+    if (username === 'admin' && password === 'dlpworks2025') {
+      setIsAdmin(true);
+      setCurrentPage('admin-dashboard');
+      alert('Connexion réussie !');
+    } else {
+      alert('Identifiants incorrects');
+    }
+    
+    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: username,
+        password: password,
+      });
 
-		if (error) throw error;
+      if (error) throw error;
 
-		setIsAdmin(true);
-		setCurrentPage('admin-dashboard');
-		alert('Connexion réussie !');
-		
-	  } catch (error) {
-		console.error('Erreur login:', error);
-		alert('Identifiants incorrects : ' + error.message);
-	  }
-	}, [username, password]);
+      setIsAdmin(true);
+      setCurrentPage('admin-dashboard');
+      alert('Connexion réussie !');
+      
+    } catch (error) {
+      console.error('Erreur login:', error);
+      alert('Identifiants incorrects : ' + error.message);
+    }
+    */
+  }, [username, password]);
 
   // Navigation Bar
   const NavBar = () => (
@@ -633,63 +619,35 @@ disneyLayer.addTo(map);
     const [newTweet, setNewTweet] = useState('');
     const [newContent, setNewContent] = useState('');
 
-	const addNews = async () => {
-	  if (!newTitle || !newContent) {
-		alert('Veuillez remplir au moins le titre et le contenu');
-		return;
-	  }
+    const addNews = () => {
+      if (!newTitle || !newContent) {
+        alert('Veuillez remplir au moins le titre et le contenu');
+        return;
+      }
 
-	  try {
-		const { data, error } = await supabase
-		  .from('news')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  tweet: newTweet,
-			  content: newContent
-			}
-		  ])
-		  .select();
+      const newItem = {
+        id: Date.now(),
+        title: newTitle,
+        date: newDate || new Date().toISOString().split('T')[0],
+        tweet: newTweet,
+        content: newContent
+      };
 
-		if (error) throw error;
+      setNews([newItem, ...news]);
 
-		setNews([data[0], ...news]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewTweet('');
-		setNewContent('');
-		
-		alert('Actualité ajoutée avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
+      setNewTitle('');
+      setNewDate('');
+      setNewTweet('');
+      setNewContent('');
+      alert('Actualité ajoutée avec succès !');
+    };
 
-	const deleteNews = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?')) {
-		return;
-	  }
-
-	  try {
-		const { error } = await supabase
-		  .from('news')
-		  .delete()
-		  .eq('id', id);
-
-		if (error) throw error;
-
-		setNews(news.filter(n => n.id !== id));
-		alert('Actualité supprimée !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+    const deleteNews = (id) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?')) {
+        setNews(news.filter(n => n.id !== id));
+        alert('Actualité supprimée !');
+      }
+    };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
@@ -771,61 +729,33 @@ disneyLayer.addTo(map);
     const [newDate, setNewDate] = useState('');
     const [newImage, setNewImage] = useState('');
 
-	const addAerial = async () => {
-	  if (!newTitle || !newImage) {
-		alert('Veuillez remplir au moins le titre et l\'URL de l\'image');
-		return;
-	  }
+    const addAerial = () => {
+      if (!newTitle || !newImage) {
+        alert('Veuillez remplir au moins le titre et l\'URL de l\'image');
+        return;
+      }
 
-	  try {
-		const { data, error } = await supabase
-		  .from('aerial_views')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  image: newImage
-			}
-		  ])
-		  .select();
+      const newItem = {
+        id: Date.now(),
+        title: newTitle,
+        date: newDate || new Date().toISOString().split('T')[0],
+        image: newImage
+      };
 
-		if (error) throw error;
+      setAerialViews([newItem, ...aerialViews]);
 
-		setAerialViews([data[0], ...aerialViews]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewImage('');
-		
-		alert('Vue aérienne ajoutée avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
+      setNewTitle('');
+      setNewDate('');
+      setNewImage('');
+      alert('Vue aérienne ajoutée avec succès !');
+    };
 
-	const deleteAerial = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
-		return;
-	  }
-
-	  try {
-		const { error } = await supabase
-		  .from('aerial_views')
-		  .delete()
-		  .eq('id', id);
-
-		if (error) throw error;
-
-		setAerialViews(aerialViews.filter(item => item.id !== id));
-		alert('Photo supprimée !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+    const deleteAerial = (id) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
+        setAerialViews(aerialViews.filter(item => item.id !== id));
+        alert('Photo supprimée !');
+      }
+    };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
@@ -902,65 +832,37 @@ disneyLayer.addTo(map);
     const [newFullContent, setNewFullContent] = useState('');
     const [newImage, setNewImage] = useState('');
 
-	const addArticle = async () => {
-	  if (!newTitle || !newContent) {
-		alert('Veuillez remplir au moins le titre et le contenu');
-		return;
-	  }
+    const addArticle = () => {
+      if (!newTitle || !newContent) {
+        alert('Veuillez remplir au moins le titre et le contenu');
+        return;
+      }
 
-	  try {
-		const { data, error } = await supabase
-		  .from('articles')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  content: newContent,
-			  full_content: newFullContent || newContent,
-			  image: newImage
-			}
-		  ])
-		  .select();
+      const newItem = {
+        id: Date.now(),
+        title: newTitle,
+        date: newDate || new Date().toISOString().split('T')[0],
+        content: newContent,
+        fullContent: newFullContent || newContent,
+        image: newImage
+      };
 
-		if (error) throw error;
+      setArticles([newItem, ...articles]);
 
-		setArticles([data[0], ...articles]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewContent('');
-		setNewFullContent('');
-		setNewImage('');
-		
-		alert('Article ajouté avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
+      setNewTitle('');
+      setNewDate('');
+      setNewContent('');
+      setNewFullContent('');
+      setNewImage('');
+      alert('Article ajouté avec succès !');
+    };
 
-	const deleteArticle = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-		return;
-	  }
-
-	  try {
-		const { error } = await supabase
-		  .from('articles')
-		  .delete()
-		  .eq('id', id);
-
-		if (error) throw error;
-
-		setArticles(articles.filter(item => item.id !== id));
-		alert('Article supprimé !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+    const deleteArticle = (id) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+        setArticles(articles.filter(item => item.id !== id));
+        alert('Article supprimé !');
+      }
+    };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">

@@ -1,72 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu, X, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, LogOut, Edit, Trash2, Plus, Youtube } from 'lucide-react';
-// Importez XIcon depuis lucide-react pour le logo X (Twitter)
-import { Twitter as XIcon } from 'lucide-react';
-
-// IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+import { Menu, X, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, LogOut, Edit, Trash2, Plus, XIcon, Youtube } from 'lucide-react';
 import { supabase } from './supabaseClient';
 
-// ===== COMPOSANT LOGIN EXTRAIT =====
-const LoginPage = ({ username, setUsername, password, setPassword, onLogin }) => {
-  return (
-    <div className="px-4 max-w-md mx-auto">
-      <div className="bg-gradient-to-br from-gray-900 to-black p-8 rounded-lg shadow-2xl">
-        <h1 className="text-3xl font-bold mb-8 text-white flex items-center justify-center">
-          <User className="mr-3 text-yellow-400" />
-          Administration
-        </h1>
-        <div className="space-y-6">
-          <div>
-            <label className="block text-gray-300 mb-2">Identifiant (Email)</label>
-            <input
-              type="email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  onLogin();
-                }
-              }}
-              autoComplete="username"
-              placeholder="admin@dlpworks.com"
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-300 mb-2">Mot de passe</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  onLogin();
-                }
-              }}
-              autoComplete="current-password"
-              placeholder="••••••••"
-              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            />
-          </div>
-          <button
-            onClick={onLogin}
-            type="button"
-            className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-yellow-400/50 transition-all"
-          >
-            Se connecter
-          </button>
-          <p className="text-xs text-gray-500 text-center">
-            Demo: admin / dlpworks2025
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-// ===== COMPOSANT PRINCIPAL =====
 const DLPWorksSite = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,16 +12,16 @@ const DLPWorksSite = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedArticle, setSelectedArticle] = useState(null);
   
-  // États pour stocker le contenu
- const [news, setNews] = useState([]);
-const [aerialViews, setAerialViews] = useState([]);
-const [articles, setArticles] = useState([]);
-const [loading, setLoading] = useState(true);
+  
+  const [news, setNews] = useState([]);
+  const [aerialViews, setAerialViews] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-// Ajouter juste après les useState
-useEffect(() => {
-  fetchAllData();
-}, []);
+	// Charger les données au démarrage
+	useEffect(() => {
+	  fetchAllData();
+	}, []);
 
 	const fetchAllData = async () => {
 	  try {
@@ -112,16 +48,30 @@ useEffect(() => {
 		
 	  } catch (error) {
 		console.error('Erreur chargement:', error);
+		alert('Erreur lors du chargement des données');
 	  } finally {
 		setLoading(false);
 	  }
 	};
+  /* const [news, setNews] = useState([
+    { id: 1, title: "Nouvelle attraction annoncée", date: "2025-10-01", tweet: "https://x.com/DLPWorks/status/1910969757756449015", content: "Disneyland Paris annonce une nouvelle attraction..." },
+    { id: 2, title: "Rénovation du Château", date: "2025-09-28", tweet: "https://x.com/DLPWorks/status/1721163361692327977", content: "Les travaux de rénovation avancent..." }
+  ]);
+  
+  const [aerialViews, setAerialViews] = useState([
+    { id: 1, title: "Vue du Château", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/n033755_2027jun24_world_main-street-usa-castle_2-1_tcm808-270423.jpg?w=1200&f=webp" },
+    { id: 2, title: "Avengers Campus", date: "2025-09-25", image: "https://media.disneylandparis.com/d4th/fr-fr/images/hd16242_2050dec31_world_avengers-campus-key-visual_16-9_tcm808-236755.jpg?w=960" }
+  ]);
+  
+  const [articles, setArticles] = useState([
+    { id: 1, title: "L'histoire de Disneyland Paris", date: "2025-09-20", content: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer et de faire rêver des millions de visiteurs. Retour sur plus de 30 ans d'histoire magique dans ce parc emblématique qui a su conquérir le cœur des Européens.", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer...\n\nContenu complet de l'article ici..." },
+    { id: 2, title: "Les secrets des Imagineers", date: "2025-09-15", content: "Découvrez les coulisses de la création des attractions et des décors féeriques de Disneyland Paris. Les Imagineers partagent leurs techniques et leurs inspirations.", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Les Imagineers sont les créateurs de magie...\n\nContenu complet de l'article ici..." }
+  ]); */
 
-  // Fonction de connexion
-	const handleLogin = useCallback(async () => {
+	const handleLogin = async () => {
 	  try {
 		const { data, error } = await supabase.auth.signInWithPassword({
-		  email: username,
+		  email: username, // utilisez l'email au lieu du username
 		  password: password,
 		});
 
@@ -133,28 +83,20 @@ useEffect(() => {
 		
 	  } catch (error) {
 		console.error('Erreur login:', error);
-		alert('Identifiants incorrects : ' + error.message);
+		alert('Identifiants incorrects');
 	  }
-	}, [username, password]);
+	};
 
-  // Navigation Bar
   const NavBar = () => (
     <nav className="bg-black text-white fixed w-full top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
             <img 
-              src="https://drive.google.com/uc?export=view&id=18bjIcS8bExtr6bHP8MQu0vntmjAuXdkN" 
+              src="https://i.ibb.co/W4tYP59k/LOGO-alphabackground.png" 
               alt="DLP Works Logo" 
               className="w-10 h-10 rounded-full object-cover shadow-lg"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
             />
-            <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full items-center justify-center shadow-lg" style={{display: 'none'}}>
-              <span className="text-2xl">🏰</span>
-            </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
               DLP Works
             </span>
@@ -226,7 +168,6 @@ useEffect(() => {
     </button>
   );
 
-  // Page d'accueil
   const HomePage = () => (
     <div className="space-y-16">
       <section className="text-center py-20 bg-gradient-to-b from-black via-gray-900 to-black">
@@ -321,7 +262,6 @@ useEffect(() => {
     </div>
   );
 
-  // Page Carte Interactive
   const MapPage = () => {
     const mapHTML = `
 <!doctype html>
@@ -397,7 +337,6 @@ disneyLayer.addTo(map);
     );
   };
 
-  // Page Actualités
   const NewsPage = () => (
     <div className="px-4 max-w-7xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
@@ -411,33 +350,28 @@ disneyLayer.addTo(map);
             <p className="text-gray-400 mb-4">{item.date}</p>
             <p className="text-gray-300 mb-4">{item.content}</p>
             
-            {item.tweet && (
-              <>
-                <div className="mt-4 border border-gray-700 rounded-lg p-4 bg-gray-800">
-                  <p className="text-gray-400 text-sm mb-2">Aperçu du tweet :</p>
-                  <blockquote className="text-gray-300 italic">
-                    "{item.content}"
-                  </blockquote>
-                </div>
-                
-                <a 
-                  href={item.tweet} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="inline-flex items-center text-yellow-400 hover:text-yellow-300 mt-4"
-                >
-                  <XIcon size={18} className="mr-2" />
-                  Voir le tweet original
-                </a>
-              </>
-            )}
+            {/* Aperçu du tweet */}
+            <div className="mt-4 border border-gray-700 rounded-lg p-4 bg-gray-800">
+              <blockquote className="twitter-tweet" data-theme="dark">
+                <a href={item.tweet}>Voir le tweet</a>
+              </blockquote>
+            </div>
+            
+            <a 
+              href={item.tweet} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="inline-flex items-center text-yellow-400 hover:text-yellow-300 mt-4"
+            >
+              <XIcon size={18} className="mr-2" />
+              Voir le tweet original
+            </a>
           </div>
         ))}
       </div>
     </div>
   );
 
-  // Page Vues Aériennes
   const AerialPage = () => (
     <>
       <div className="px-4 max-w-7xl mx-auto">
@@ -464,6 +398,7 @@ disneyLayer.addTo(map);
         </div>
       </div>
 
+      {/* Modal pour afficher l'image en grand */}
       {selectedImage && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
@@ -491,33 +426,31 @@ disneyLayer.addTo(map);
     </>
   );
 
-  // Page Articles
   const ArticlesPage = () => (
-    <>
-      <div className="px-4 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
-          <FileText className="mr-3 text-yellow-400" />
-          Articles
-        </h1>
-        <div className="space-y-8">
-          {articles.map(item => (
-            <div 
-              key={item.id} 
-              onClick={() => setSelectedArticle(item)}
-              className="bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2 cursor-pointer"
-            >
-              <img src={item.image} alt={item.title} className="w-full h-64 object-cover" />
-              <div className="p-6">
-                <h2 className="text-3xl font-bold text-yellow-400 mb-2">{item.title}</h2>
-                <p className="text-gray-400 mb-4">{item.date}</p>
-                <p className="text-gray-300">{item.content}</p>
-                <p className="text-yellow-400 mt-4">Cliquez pour lire l'article complet →</p>
-              </div>
+    <div className="px-4 max-w-7xl mx-auto">
+      <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
+        <FileText className="mr-3 text-yellow-400" />
+        Articles
+      </h1>
+      <div className="space-y-8">
+        {articles.map(item => (
+          <div 
+            key={item.id} 
+            onClick={() => setSelectedArticle(item)}
+            className="bg-gradient-to-br from-gray-900 to-black rounded-lg overflow-hidden shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2 cursor-pointer"
+          >
+            <img src={item.image} alt={item.title} className="w-full h-64 object-cover" />
+            <div className="p-6">
+              <h2 className="text-3xl font-bold text-yellow-400 mb-2">{item.title}</h2>
+              <p className="text-gray-400 mb-4">{item.date}</p>
+              <p className="text-gray-300">{item.content}</p>
+              <p className="text-yellow-400 mt-4">Cliquez pour lire l'article complet →</p>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
+      {/* Modal pour afficher l'article complet */}
       {selectedArticle && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-90 z-50 overflow-y-auto"
@@ -546,10 +479,9 @@ disneyLayer.addTo(map);
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 
-  // Page Contact
   const ContactPage = () => (
     <div className="px-4 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
@@ -582,7 +514,48 @@ disneyLayer.addTo(map);
     </div>
   );
 
-  // Dashboard Admin
+  const LoginPage = React.memo(() => (
+    <div className="px-4 max-w-md mx-auto">
+      <div className="bg-gradient-to-br from-gray-900 to-black p-8 rounded-lg shadow-2xl">
+        <h1 className="text-3xl font-bold mb-8 text-white flex items-center justify-center">
+          <User className="mr-3 text-yellow-400" />
+          Administration
+        </h1>
+        <div className="space-y-6">
+          <div>
+            <label className="block text-gray-300 mb-2">Identifiant</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              autoComplete="username"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-300 mb-2">Mot de passe</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              autoComplete="current-password"
+              className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            />
+          </div>
+          <button
+            onClick={handleLogin}
+            className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-yellow-400/50 transition-all"
+          >
+            Se connecter
+          </button>
+          <p className="text-xs text-gray-500 text-center">Demo: admin / dlpworks2025</p>
+        </div>
+      </div>
+    </div>
+  ));
+
   const AdminDashboard = () => (
     <div className="px-4 max-w-7xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white">Espace Administrateur</h1>
@@ -626,70 +599,41 @@ disneyLayer.addTo(map);
     </button>
   );
 
-  // Admin News
-  const AdminNews = () => {
-    const [newTitle, setNewTitle] = useState('');
-    const [newDate, setNewDate] = useState('');
-    const [newTweet, setNewTweet] = useState('');
-    const [newContent, setNewContent] = useState('');
+  const addNews = async () => {
+  if (!newTitle || !newContent) {
+    alert('Veuillez remplir au moins le titre et le contenu');
+    return;
+  }
 
-	const addNews = async () => {
-	  if (!newTitle || !newContent) {
-		alert('Veuillez remplir au moins le titre et le contenu');
-		return;
-	  }
+  try {
+    const { data, error } = await supabase
+      .from('news')
+      .insert([
+        {
+          title: newTitle,
+          date: newDate || new Date().toISOString().split('T')[0],
+          tweet: newTweet,
+          content: newContent
+        }
+      ])
+      .select();
 
-	  try {
-		const { data, error } = await supabase
-		  .from('news')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  tweet: newTweet,
-			  content: newContent
-			}
-		  ])
-		  .select();
+    if (error) throw error;
 
-		if (error) throw error;
-
-		setNews([data[0], ...news]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewTweet('');
-		setNewContent('');
-		
-		alert('Actualité ajoutée avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
-
-	const deleteNews = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?')) {
-		return;
-	  }
-
-	  try {
-		const { error } = await supabase
-		  .from('news')
-		  .delete()
-		  .eq('id', id);
-
-		if (error) throw error;
-
-		setNews(news.filter(n => n.id !== id));
-		alert('Actualité supprimée !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+    setNews([data[0], ...news]);
+    
+    // Reset formulaire
+    setNewTitle('');
+    setNewDate('');
+    setNewTweet('');
+    setNewContent('');
+    
+    alert('Actualité ajoutée avec succès !');
+  } catch (error) {
+    console.error('Erreur:', error);
+    alert('Erreur lors de l\'ajout : ' + error.message);
+  }
+};
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
@@ -752,7 +696,11 @@ disneyLayer.addTo(map);
                   <Edit size={20} />
                 </button>
                 <button
-                  onClick={() => deleteNews(item.id)}
+                  onClick={() => {
+                    if (window.confirm('Êtes-vous sûr de vouloir supprimer cette actualité ?')) {
+                      setNews(news.filter(n => n.id !== item.id));
+                    }
+                  }}
                   className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors"
                 >
                   <Trash2 size={20} />
@@ -765,67 +713,114 @@ disneyLayer.addTo(map);
     );
   };
 
-  // Admin Aerial
+
+const uploadImage = async (file) => {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+    const filePath = `aerial/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('images')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  } catch (error) {
+    console.error('Erreur upload:', error);
+    return null;
+  }
+};
+
   const AdminAerial = () => {
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
     const [newImage, setNewImage] = useState('');
 
-	const addAerial = async () => {
-	  if (!newTitle || !newImage) {
-		alert('Veuillez remplir au moins le titre et l\'URL de l\'image');
-		return;
-	  }
+const [imageFile, setImageFile] = useState(null);
 
-	  try {
-		const { data, error } = await supabase
-		  .from('aerial_views')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  image: newImage
-			}
-		  ])
-		  .select();
+const addAerial = async () => {
+  let imageUrl = newImage;
 
-		if (error) throw error;
+  // Si un fichier est uploadé
+  if (imageFile) {
+    imageUrl = await uploadImage(imageFile);
+    if (!imageUrl) {
+      alert('Erreur lors de l\'upload de l\'image');
+      return;
+    }
+  }
 
-		setAerialViews([data[0], ...aerialViews]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewImage('');
-		
-		alert('Vue aérienne ajoutée avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
+  if (!newTitle || !imageUrl) {
+    alert('Veuillez remplir le titre et fournir une image');
+    return;
+  }
 
-	const deleteAerial = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
-		return;
-	  }
+  try {
+    const { data, error } = await supabase
+      .from('aerial_views')
+      .insert([
+        {
+          title: newTitle,
+          date: newDate || new Date().toISOString().split('T')[0],
+          image: imageUrl
+        }
+      ])
+      .select();
 
-	  try {
-		const { error } = await supabase
-		  .from('aerial_views')
-		  .delete()
-		  .eq('id', id);
+    if (error) throw error;
 
-		if (error) throw error;
+    setAerialViews([data[0], ...aerialViews]);
+    
+    setNewTitle('');
+    setNewDate('');
+    setNewImage('');
+    setImageFile(null);
+    
+    alert('Vue aérienne ajoutée avec succès !');
+  } catch (error) {
+    console.error('Erreur:', error);
+    alert('Erreur lors de l\'ajout');
+  }
+};
 
-		setAerialViews(aerialViews.filter(item => item.id !== id));
-		alert('Photo supprimée !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+// Dans le JSX du formulaire, ajoutez :
+<div>
+  <label className="block text-gray-300 mb-2">Upload une image</label>
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(e) => setImageFile(e.target.files[0])}
+    className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg"
+  />
+</div>
+<p className="text-gray-400 text-sm">OU</p>
+<input
+  type="url"
+  placeholder="URL de l'image"
+  value={newImage}
+  onChange={(e) => setNewImage(e.target.value)}
+  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg"
+/>
+
+      setAerialViews([newItem, ...aerialViews]);
+
+      setNewTitle('');
+      setNewDate('');
+      setNewImage('');
+      alert('Vue aérienne ajoutée avec succès !');
+    };
+
+    const deleteAerial = (id) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cette photo ?')) {
+        setAerialViews(aerialViews.filter(item => item.id !== id));
+      }
+    };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
@@ -833,7 +828,6 @@ disneyLayer.addTo(map);
           <h1 className="text-4xl font-bold text-white mb-6">Gestion des Vues Aériennes</h1>
           <div className="bg-gray-800 p-6 rounded-lg space-y-4">
             <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ajouter une vue aérienne</h2>
-            
             <input
               type="text"
               placeholder="Titre de la photo *"
@@ -841,14 +835,12 @@ disneyLayer.addTo(map);
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <input
               type="date"
               value={newDate}
               onChange={(e) => setNewDate(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <input
               type="url"
               placeholder="URL de l'image * (ex: https://...)"
@@ -856,12 +848,10 @@ disneyLayer.addTo(map);
               onChange={(e) => setNewImage(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
-            <p className="text-gray-400 text-sm">💡 Conseil: Utilisez Imgur.com pour héberger vos images gratuitement</p>
-            
+            <p className="text-gray-400 text-sm">💡 Conseil: Utilisez Imgur, Unsplash ou uploadez l'image sur votre hébergeur</p>
             <button
               onClick={addAerial}
-              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold w-full justify-center"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold"
             >
               <Plus size={20} className="mr-2" />
               Ajouter la photo
@@ -894,7 +884,6 @@ disneyLayer.addTo(map);
     );
   };
 
-  // Admin Articles
   const AdminArticles = () => {
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
@@ -902,65 +891,36 @@ disneyLayer.addTo(map);
     const [newFullContent, setNewFullContent] = useState('');
     const [newImage, setNewImage] = useState('');
 
-	const addArticle = async () => {
-	  if (!newTitle || !newContent) {
-		alert('Veuillez remplir au moins le titre et le contenu');
-		return;
-	  }
+    const addArticle = () => {
+      if (!newTitle || !newContent) {
+        alert('Veuillez remplir au moins le titre et le contenu');
+        return;
+      }
 
-	  try {
-		const { data, error } = await supabase
-		  .from('articles')
-		  .insert([
-			{
-			  title: newTitle,
-			  date: newDate || new Date().toISOString().split('T')[0],
-			  content: newContent,
-			  full_content: newFullContent || newContent,
-			  image: newImage
-			}
-		  ])
-		  .select();
+      const newItem = {
+        id: Date.now(),
+        title: newTitle,
+        date: newDate || new Date().toISOString().split('T')[0],
+        content: newContent,
+        fullContent: newFullContent || newContent,
+        image: newImage
+      };
 
-		if (error) throw error;
+      setArticles([newItem, ...articles]);
 
-		setArticles([data[0], ...articles]);
-		
-		setNewTitle('');
-		setNewDate('');
-		setNewContent('');
-		setNewFullContent('');
-		setNewImage('');
-		
-		alert('Article ajouté avec succès !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de l\'ajout : ' + error.message);
-	  }
-	};
+      setNewTitle('');
+      setNewDate('');
+      setNewContent('');
+      setNewFullContent('');
+      setNewImage('');
+      alert('Article ajouté avec succès !');
+    };
 
-	const deleteArticle = async (id) => {
-	  if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-		return;
-	  }
-
-	  try {
-		const { error } = await supabase
-		  .from('articles')
-		  .delete()
-		  .eq('id', id);
-
-		if (error) throw error;
-
-		setArticles(articles.filter(item => item.id !== id));
-		alert('Article supprimé !');
-		
-	  } catch (error) {
-		console.error('Erreur:', error);
-		alert('Erreur lors de la suppression : ' + error.message);
-	  }
-	};
+    const deleteArticle = (id) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
+        setArticles(articles.filter(item => item.id !== id));
+      }
+    };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
@@ -968,7 +928,6 @@ disneyLayer.addTo(map);
           <h1 className="text-4xl font-bold text-white mb-6">Gestion des Articles</h1>
           <div className="bg-gray-800 p-6 rounded-lg space-y-4">
             <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ajouter un article</h2>
-            
             <input
               type="text"
               placeholder="Titre de l'article *"
@@ -976,14 +935,12 @@ disneyLayer.addTo(map);
               onChange={(e) => setNewTitle(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <input
               type="date"
               value={newDate}
               onChange={(e) => setNewDate(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <input
               type="url"
               placeholder="URL de l'image de couverture"
@@ -991,24 +948,21 @@ disneyLayer.addTo(map);
               onChange={(e) => setNewImage(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <textarea
               placeholder="Résumé court (affiché sur la page d'accueil) *"
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <textarea
               placeholder="Contenu complet de l'article (optionnel, sinon le résumé sera utilisé)"
               value={newFullContent}
               onChange={(e) => setNewFullContent(e.target.value)}
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            
             <button
               onClick={addArticle}
-              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold w-full justify-center"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold"
             >
               <Plus size={20} className="mr-2" />
               Ajouter l'article
@@ -1020,9 +974,9 @@ disneyLayer.addTo(map);
           <h2 className="text-2xl font-bold text-white mb-4">Articles existants</h2>
           {articles.map(item => (
             <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black rounded-lg shadow-xl overflow-hidden">
-              <div className="flex flex-col md:flex-row">
+              <div className="flex">
                 {item.image && (
-                  <img src={item.image} alt={item.title} className="w-full md:w-48 h-48 object-cover" />
+                  <img src={item.image} alt={item.title} className="w-48 h-48 object-cover" />
                 )}
                 <div className="flex-1 p-6">
                   <h3 className="text-xl font-bold text-yellow-400 mb-2">{item.title}</h3>
@@ -1058,15 +1012,7 @@ disneyLayer.addTo(map);
         {currentPage === 'aerial' && <AerialPage />}
         {currentPage === 'articles' && <ArticlesPage />}
         {currentPage === 'contact' && <ContactPage />}
-        {currentPage === 'login' && !isAdmin && (
-          <LoginPage 
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-            onLogin={handleLogin}
-          />
-        )}
+        {currentPage === 'login' && !isAdmin && <LoginPage />}
         {currentPage === 'admin-dashboard' && isAdmin && <AdminDashboard />}
         {currentPage === 'admin-news' && isAdmin && <AdminNews />}
         {currentPage === 'admin-aerial' && isAdmin && <AdminAerial />}
