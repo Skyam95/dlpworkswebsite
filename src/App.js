@@ -80,7 +80,7 @@ const DLPWorksSite = () => {
  const [news, setNews] = useState([]);
 const [aerialViews, setAerialViews] = useState([]);
 const [articles, setArticles] = useState([]);
-/*const [loading, setLoading] = useState(true); MIS EN COMMENTAIRE CAR NON UTILISE */
+const [loading, setLoading] = useState(true);
 
 // Ajouter juste après les useState
 useEffect(() => {
