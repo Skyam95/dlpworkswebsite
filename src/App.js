@@ -6,7 +6,7 @@ import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit,
 // Objectif : Importer l'icône X (Twitter) renommée pour éviter les conflits.
 import { Twitter as XIcon } from 'lucide-react';
 import { Tweet } from 'react-tweet';
-import { fetchTweet } from 'react-tweet/api';
+//import { fetchTweet } from 'react-tweet/api';
 import { supabase } from './supabaseClient'; // IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
 
 // ===== COMPOSANT LOGIN EXTRAIT =====
@@ -490,7 +490,7 @@ const NewsPage = () => {
 // Ajoutez en haut de NewsPage
 
 // Exemple de fetch avec cache simple (utilisez un vrai cache comme Redis en prod)
-const cachedTweets = new Map();
+//const cachedTweets = new Map();
 
 /*const getCachedTweet = async (id) => {
   if (cachedTweets.has(id)) return cachedTweets.get(id);
