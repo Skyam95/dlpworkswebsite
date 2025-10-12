@@ -1,16 +1,15 @@
 // ===== IMPORTS =====
-// Objectif : Importer les modules React nécessaires pour la gestion d'état, callbacks et effets secondaires.
 import React, { useState, useCallback, useEffect } from 'react';
-// Objectif : Importer les icônes de lucide-react pour l'interface utilisateur (boutons, sections, etc.).
-import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit, Trash2, Plus, Youtube, Newspaper, Pencil } from 'lucide-react'; // Ajout de Pencil pour l'icône crayon des articles.
-// Objectif : Importer l'icône X (Twitter) renommée pour éviter les conflits.
+// Import des icônes de lucide-react pour l'interface
+import { Menu, X, Facebook, Instagram, MapPin, Camera, FileText, Mail, User, LogOut, Edit, Trash2, Plus, Youtube } from 'lucide-react';
+// Import de l'icône X (Twitter) - renommée pour éviter les conflits avec le composant X
 import { Twitter as XIcon } from 'lucide-react';
-import { Tweet } from 'react-tweet';
-import { fetchTweet } from 'react-tweet/api';
-import { supabase } from './supabaseClient'; // IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+
+// IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+// import { supabase } from './supabaseClient';
 
 // ===== COMPOSANT LOGIN EXTRAIT =====
-// Objectif : Composant isolé pour la page de login, évitant les re-renders inutiles et pertes de focus sur les inputs.
+// Ce composant est extrait pour éviter les problèmes de re-render et perte de focus
 const LoginPage = ({ username, setUsername, password, setPassword, onLogin }) => {
   return (
     <div className="px-4 max-w-md mx-auto">
@@ -80,7 +79,6 @@ const LoginPage = ({ username, setUsername, password, setPassword, onLogin }) =>
 };
 
 // ===== COMPOSANT PRINCIPAL =====
-// Objectif : Composant racine de l'application, gérant l'état global, la navigation et le rendu des pages.
 const DLPWorksSite = () => {
   // États pour la navigation
   const [currentPage, setCurrentPage] = useState('home'); // Page actuelle
@@ -94,49 +92,6 @@ const DLPWorksSite = () => {
   // États pour les modals
   const [selectedImage, setSelectedImage] = useState(null); // Image agrandie
   const [selectedArticle, setSelectedArticle] = useState(null); // Article en lecture
-  
-  
-  // ===== COMPOSANTS ICÔNES PERSONNALISÉS =====
-  // Objectif : Définir des icônes personnalisées avec SVG pour X (Twitter) et Threads.
-
-  // Composant icône X (Twitter) - Logo officiel
-  const XIconCustom = ({ size = 24, className = "" }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </svg>
-  );
-
-  // Composant icône Threads - Logo officiel corrigé (le @ stylisé)
-  const ThreadsIcon = ({ size = 24, className = "" }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      <path d="M12 2C6.477 2 2 6.477 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10c0-5.523-4.477-10-10-10zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zm1-13h-2v2h1c1.657 0 3 1.343 3 3s-1.343 3-3 3h-1v2h2c2.761 0 5-2.239 5-5s-2.239-5-5-5z"/>
-    </svg> // SVG corrigé pour représenter le @ stylisé de Threads.
-  );
-  
-  
-  // ===== MODIFICATION: GESTION DU TITRE DE L'ONGLET =====
-  // Objectif : Mettre à jour dynamiquement le titre de l'onglet du navigateur en fonction de la page active.
-  const getPageTitle = (page) => {
-    const titles = {
-      'home': 'Accueil',
-      'map': 'Carte Interactive',
-      'news': 'Actualités',
-      'aerial': 'Vues Aériennes',
-      'articles': 'Articles',
-      'contact': 'Contact',
-      'login': 'Connexion Admin',
-      'admin-dashboard': 'Dashboard Admin',
-      'admin-news': 'Gestion des Actualités',
-      'admin-aerial': 'Gestion des Vues Aériennes',
-      'admin-articles': 'Gestion des Articles'
-    };
-    return titles[page] || 'DLP Works';
-  };
-
-  // Mettre à jour le titre à chaque changement de page
-  useEffect(() => {
-    document.title = `DLP Works - ${getPageTitle(currentPage)}`;
-  }, [currentPage]);
   
   // États pour les données - initialement vides, seront remplis par Supabase
   const [news, setNews] = useState([
@@ -155,18 +110,18 @@ const DLPWorksSite = () => {
   ]);
 
   // ===== FONCTION DE CONNEXION =====
-  // Objectif : Gérer la logique de login (version simple sans Supabase pour l'instant).
+  // useCallback évite la recréation de la fonction à chaque render
   const handleLogin = useCallback(() => {
     // VERSION SIMPLE (sans Supabase pour le moment)
-    /*if (username === 'admin' && password === 'dlpworks2025') {
+    if (username === 'admin' && password === 'dlpworks2025') {
       setIsAdmin(true);
       setCurrentPage('admin-dashboard');
       alert('Connexion réussie !');
     } else {
       alert('Identifiants incorrects');
-    }*/
+    }
     
-    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)*/
+    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: username,
@@ -183,11 +138,10 @@ const DLPWorksSite = () => {
       console.error('Erreur login:', error);
       alert('Identifiants incorrects : ' + error.message);
     }
-    
+    */
   }, [username, password]);
 
   // ===== BARRE DE NAVIGATION =====
-  // Objectif : Composant pour la navbar fixe en haut, avec menu desktop/mobile et liens conditionnels pour admin.
   const NavBar = () => (
     <nav className="bg-black text-white fixed w-full top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
@@ -196,7 +150,7 @@ const DLPWorksSite = () => {
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
             {/* MODIFICATION: Logo DLP Works depuis Google Drive */}
             <img 
-              src="https://i.ibb.co/Z6q3W8Mv/LOGO-alphabackground.png" 
+              src="https://drive.google.com/uc?export=view&id=18bjIcS8bExtr6bHP8MQu0vntmjAuXdkN" 
               alt="DLP Works Logo" 
               className="w-10 h-10 rounded-full object-cover shadow-lg"
               onError={(e) => {
@@ -287,7 +241,6 @@ const DLPWorksSite = () => {
   );
 
   // ===== PAGE D'ACCUEIL =====
-  // Objectif : Page principale avec sections hero, actualités, vues aériennes et articles (cliquables pour redirection).
   const HomePage = () => (
     <div className="space-y-16">
       {/* Section hero avec titre et réseaux sociaux */}
@@ -313,9 +266,12 @@ const DLPWorksSite = () => {
           <a href="https://www.instagram.com/dlp.works/" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform">
             <Instagram size={32} className="text-white hover:text-yellow-400" />
           </a>
-          {/* Logo Threads - Correction avec SVG @ stylisé */}
+          {/* Logo Threads */}
           <a href="https://www.threads.net/@dlp.works" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform">
-            <ThreadsIcon size={32} className="text-white hover:text-yellow-400" />
+            {/* Icône Threads (SVG personnalisé car pas dans lucide-react) */}
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="text-white hover:text-yellow-400">
+              <path d="M12.186 3.094c-.908 0-1.715.166-2.416.497a5.155 5.155 0 0 0-1.772 1.388 6.182 6.182 0 0 0-1.062 2.005c-.276.768-.414 1.576-.414 2.426 0 .85.138 1.658.414 2.426a6.182 6.182 0 0 0 1.062 2.005 5.155 5.155 0 0 0 1.772 1.388c.701.331 1.508.497 2.416.497.908 0 1.715-.166 2.416-.497a5.155 5.155 0 0 0 1.772-1.388 6.182 6.182 0 0 0 1.062-2.005c.276-.768.414-1.576.414-2.426 0-.85-.138-1.658-.414-2.426a6.182 6.182 0 0 0-1.062-2.005 5.155 5.155 0 0 0-1.772-1.388c-.701-.331-1.508-.497-2.416-.497zm0 1.5c.682 0 1.29.124 1.818.372.53.248.975.585 1.338 1.011.363.426.635.919.818 1.478.182.56.274 1.148.274 1.763 0 .615-.092 1.203-.274 1.763a4.682 4.682 0 0 1-.818 1.478c-.363.426-.809.763-1.338 1.011-.528.248-1.136.372-1.818.372-.682 0-1.29-.124-1.818-.372a3.655 3.655 0 0 1-1.338-1.011 4.682 4.682 0 0 1-.818-1.478c-.182-.56-.274-1.148-.274-1.763 0-.615.092-1.203.274-1.763.183-.56.455-1.052.818-1.478.363-.426.809-.763 1.338-1.011.528-.248 1.136-.372 1.818-.372z"/>
+            </svg>
           </a>
           {/* Logo YouTube */}
           <a href="https://www.youtube.com/@DLPWorks" target="_blank" rel="noopener noreferrer" className="transform hover:scale-110 transition-transform">
@@ -327,7 +283,7 @@ const DLPWorksSite = () => {
       {/* MODIFICATION: Section actualités - cliquable et redirige vers la page actualités */}
       <section className="px-4 max-w-7xl mx-auto">
         <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
-		<Newspaper className="mr-3 text-yellow-400" />
+          <FileText className="mr-3 text-yellow-400" />
           Dernières Actualités
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
@@ -370,11 +326,11 @@ const DLPWorksSite = () => {
         </div>
       </section>
 
-      {/* MODIFICATION: Section articles - cliquable et redirige vers la page articles ; icône changée en Pencil */}
+      {/* MODIFICATION: Section articles - cliquable et redirige vers la page articles */}
       <section className="px-4 max-w-7xl mx-auto pb-16">
         <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
-		<Pencil className="mr-3 text-yellow-400" /> {/* Changement : Icône crayon pour articles */}
-			Articles Récents
+          <FileText className="mr-3 text-yellow-400" />
+          Articles Récents
         </h2>
         <div className="grid md:grid-cols-2 gap-6">
           {articles.slice(0, 2).map(item => (
@@ -397,7 +353,6 @@ const DLPWorksSite = () => {
   );
 
   // ===== PAGE CARTE INTERACTIVE =====
-  // Objectif : Afficher une carte interactive de Disneyland Paris via Leaflet embeddé dans un iframe srcDoc.
   const MapPage = () => {
     // HTML complet de la carte Leaflet avec les tuiles Disney
     const mapHTML = `
@@ -480,62 +435,67 @@ disneyLayer.addTo(map);
     );
   };
 
+  // ===== PAGE ACTUALITÉS =====
+  const NewsPage = () => {
+    // Charger le script Twitter pour l'embed des tweets (une seule fois)
+    useEffect(() => {
+      // Vérifier si le script est déjà chargé
+      if (!window.twttr) {
+        const script = document.createElement('script');
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.async = true;
+        script.charset = 'utf-8';
+        document.body.appendChild(script);
+      } else {
+        // Si le script est déjà chargé, recharger les widgets
+        window.twttr.widgets.load();
+      }
+    }, [news]); // Recharger quand les news changent
 
-
-// ===== PAGE ACTUALITÉS =====
-// Objectif : Afficher la liste des actualités avec embeds Twitter/X intégrés via react-tweet pour un rendu complet et interactif.
-const NewsPage = () => {
-  // Pas besoin de charger widgets.js manuellement ; react-tweet gère les fetches API.
-
-// Ajoutez en haut de NewsPage
-
-// Exemple de fetch avec cache simple (utilisez un vrai cache comme Redis en prod)
-const cachedTweets = new Map();
-
-const getCachedTweet = async (id) => {
-  if (cachedTweets.has(id)) return cachedTweets.get(id);
-  const tweet = await fetchTweet(id);
-  cachedTweets.set(id, tweet);
-  return tweet;
-};
-
-// Puis, utilisez <EmbeddedTweet tweet={await getCachedTweet(id)} /> au lieu de <Tweet id={id} />
-  // Fonction utilitaire pour extraire l'ID du tweet à partir de l'URL
-  const getTweetId = (url) => {
-    const match = url.match(/status\/(\d+)/);
-    return match ? match[1] : null;
+    return (
+      <div className="px-4 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
+          <FileText className="mr-3 text-yellow-400" />
+          Actualités
+        </h1>
+        <div className="space-y-6">
+          {news.map(item => (
+            <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
+              <h2 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h2>
+              <p className="text-gray-400 mb-4">{item.date}</p>
+              <p className="text-gray-300 mb-4">{item.content}</p>
+              
+              {/* MODIFICATION: Affichage du tweet intégré avec blockquote Twitter */}
+              {item.tweet && (
+                <div className="mt-6">
+                  {/* Conteneur pour le tweet intégré */}
+                  <div className="twitter-embed-container bg-gray-800 p-4 rounded-lg">
+                    {/* Blockquote Twitter - sera transformé par le script Twitter */}
+                    <blockquote className="twitter-tweet" data-theme="dark">
+                      <a href={item.tweet}>Voir le tweet</a>
+                    </blockquote>
+                  </div>
+                  
+                  {/* Lien vers le tweet original */}
+                  <a 
+                    href={item.tweet} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center text-yellow-400 hover:text-yellow-300 mt-4"
+                  >
+                    <XIcon size={18} className="mr-2" />
+                    Ouvrir sur X
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
-  return (
-    <div className="px-4 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
-        <Newspaper className="mr-3 text-yellow-400" />
-        Actualités
-      </h1>
-      <div className="space-y-6">
-        {news.map(item => (
-          <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
-            <h2 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h2>
-            <p className="text-gray-400 mb-4">{item.date}</p>
-            <p className="text-gray-300 mb-4">{item.content}</p>
-            
-            {/* Intégration du tweet avec react-tweet : Affiche le texte complet, images, stats (vues/likes/réponses), et ouvre les liens en nouvel onglet */}
-            {item.tweet && (
-              <div className="mt-6">
-                <div className="twitter-embed-container" data-theme="dark"> {/* Thème sombre pour matcher votre site */}
-                  <Tweet id={getTweetId(item.tweet)} />
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
   // ===== PAGE VUES AÉRIENNES =====
-  // Objectif : Afficher la galerie de vues aériennes avec modal pour agrandissement.
   const AerialPage = () => (
     <>
       <div className="px-4 max-w-7xl mx-auto">
@@ -594,12 +554,11 @@ const getCachedTweet = async (id) => {
   );
 
   // ===== PAGE ARTICLES =====
-  // Objectif : Afficher la liste des articles avec modal pour lecture complète, en rendant le HTML formaté.
   const ArticlesPage = () => (
     <>
       <div className="px-4 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
-          <Pencil className="mr-3 text-yellow-400" /> {/* Changement : Icône crayon pour articles */}
+          <FileText className="mr-3 text-yellow-400" />
           Articles
         </h1>
         <div className="space-y-8">
@@ -645,8 +604,9 @@ const getCachedTweet = async (id) => {
               <div className="p-8">
                 <h1 className="text-4xl font-bold text-yellow-400 mb-4">{selectedArticle.title}</h1>
                 <p className="text-gray-400 mb-6">{selectedArticle.date}</p>
-                {/* MODIFICATION : Rendre le HTML avec dangerouslySetInnerHTML pour appliquer le formatage sans montrer les tags */}
-                <div className="text-gray-300 text-lg leading-relaxed" dangerouslySetInnerHTML={{ __html: selectedArticle.fullContent || selectedArticle.content }} />
+                <div className="text-gray-300 text-lg leading-relaxed whitespace-pre-wrap">
+                  {selectedArticle.fullContent || selectedArticle.content}
+                </div>
               </div>
             </div>
           </div>
@@ -656,7 +616,6 @@ const getCachedTweet = async (id) => {
   );
 
   // ===== PAGE CONTACT =====
-  // Objectif : Afficher les informations de contact et mentions légales.
   const ContactPage = () => (
     <div className="px-4 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
@@ -690,7 +649,6 @@ const getCachedTweet = async (id) => {
   );
 
   // ===== DASHBOARD ADMIN =====
-  // Objectif : Dashboard pour admins avec cartes de navigation vers les sections de gestion.
   const AdminDashboard = () => (
     <div className="px-4 max-w-7xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white">Espace Administrateur</h1>
@@ -703,7 +661,7 @@ const getCachedTweet = async (id) => {
           onClick={() => setCurrentPage('admin-map')}
         />
         <AdminCard
-          icon={<Newspaper size={32} />}
+          icon={<FileText size={32} />}
           title="Actualités"
           description="Ajouter et gérer les actualités"
           onClick={() => setCurrentPage('admin-news')}
@@ -715,7 +673,7 @@ const getCachedTweet = async (id) => {
           onClick={() => setCurrentPage('admin-aerial')}
         />
         <AdminCard
-          icon={<Pencil size={32} />} /*{/* Changement : Icône crayon pour gestion articles }*/
+          icon={<FileText size={32} />}
           title="Articles"
           description="Rédiger et gérer les articles"
           onClick={() => setCurrentPage('admin-articles')}
@@ -737,7 +695,6 @@ const getCachedTweet = async (id) => {
   );
 
   // ===== PAGE GESTION DES ACTUALITÉS =====
-  // Objectif : Formulaire pour ajouter/supprimer des actualités.
   const AdminNews = () => {
     // États pour le formulaire d'ajout
     const [newTitle, setNewTitle] = useState('');
@@ -870,7 +827,6 @@ const getCachedTweet = async (id) => {
   };
 
   // ===== PAGE GESTION DES VUES AÉRIENNES =====
-  // Objectif : Formulaire pour ajouter/supprimer des vues aériennes.
   const AdminAerial = () => {
     // États pour le formulaire
     const [newTitle, setNewTitle] = useState('');
@@ -976,74 +932,19 @@ const getCachedTweet = async (id) => {
     );
   };
 
-  
-    // ===== PAGE GESTION DES ARTICLES =====
-    // Objectif : Formulaire avancé pour ajouter/modifier/supprimer des articles avec outils de formatage HTML.
+  // ===== PAGE GESTION DES ARTICLES =====
   const AdminArticles = () => {
+    // États pour le formulaire
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
     const [newContent, setNewContent] = useState('');
     const [newFullContent, setNewFullContent] = useState('');
     const [newImage, setNewImage] = useState('');
+    
+    // MODIFICATION: État pour gérer l'édition d'un article
     const [editingArticle, setEditingArticle] = useState(null);
 
-    // MODIFICATION: Fonctions pour enrichir le texte avec formatage HTML
-    const applyFormatting = (tag) => {
-      const textarea = document.getElementById('fullContentTextarea');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = newFullContent.substring(start, end);
-      
-      if (!selectedText) {
-        alert('Veuillez sélectionner du texte à formater');
-        return;
-      }
-
-      let formattedText = '';
-      switch(tag) {
-        case 'bold':
-          formattedText = `<strong>${selectedText}</strong>`;
-          break;
-        case 'italic':
-          formattedText = `<em>${selectedText}</em>`;
-          break;
-        case 'underline':
-          formattedText = `<u>${selectedText}</u>`;
-          break;
-        case 'h2':
-          formattedText = `<h2 class="text-3xl font-bold text-yellow-400 my-4">${selectedText}</h2>`;
-          break;
-        case 'h3':
-          formattedText = `<h3 class="text-2xl font-bold text-yellow-300 my-3">${selectedText}</h3>`;
-          break;
-        case 'paragraph':
-          formattedText = `<p class="my-4">${selectedText}</p>`;
-          break;
-        default:
-          formattedText = selectedText;
-      }
-
-      const newText = newFullContent.substring(0, start) + formattedText + newFullContent.substring(end);
-      setNewFullContent(newText);
-    };
-
-    // Fonction pour appliquer une couleur
-    const applyColor = (color) => {
-      const textarea = document.getElementById('fullContentTextarea');
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = newFullContent.substring(start, end);
-      
-      if (!selectedText) {
-        alert('Veuillez sélectionner du texte à colorer');
-        return;
-      }
-
-      const formattedText = `<span style="color: ${color}">${selectedText}</span>`;
-      const newText = newFullContent.substring(0, start) + formattedText + newFullContent.substring(end);
-      setNewFullContent(newText);
-    };
-
+    // Fonction pour ajouter un article
     const addArticle = () => {
       if (!newTitle || !newContent) {
         alert('Veuillez remplir au moins le titre et le contenu');
@@ -1061,6 +962,7 @@ const getCachedTweet = async (id) => {
 
       setArticles([newItem, ...articles]);
 
+      // Reset du formulaire
       setNewTitle('');
       setNewDate('');
       setNewContent('');
@@ -1069,22 +971,27 @@ const getCachedTweet = async (id) => {
       alert('Article ajouté avec succès !');
     };
 
+    // MODIFICATION: Fonction pour commencer l'édition d'un article
     const startEdit = (article) => {
       setEditingArticle(article);
+      // Pré-remplir le formulaire avec les données de l'article
       setNewTitle(article.title);
       setNewDate(article.date);
       setNewContent(article.content);
       setNewFullContent(article.fullContent || article.content);
       setNewImage(article.image || '');
+      // Scroll vers le haut pour voir le formulaire
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    // MODIFICATION: Fonction pour sauvegarder les modifications
     const saveEdit = () => {
       if (!newTitle || !newContent) {
         alert('Veuillez remplir au moins le titre et le contenu');
         return;
       }
 
+      // Mettre à jour l'article existant
       const updatedArticles = articles.map(article => 
         article.id === editingArticle.id
           ? {
@@ -1100,6 +1007,7 @@ const getCachedTweet = async (id) => {
 
       setArticles(updatedArticles);
 
+      // Réinitialiser le formulaire et l'état d'édition
       setEditingArticle(null);
       setNewTitle('');
       setNewDate('');
@@ -1109,6 +1017,7 @@ const getCachedTweet = async (id) => {
       alert('Article modifié avec succès !');
     };
 
+    // MODIFICATION: Fonction pour annuler l'édition
     const cancelEdit = () => {
       setEditingArticle(null);
       setNewTitle('');
@@ -1118,6 +1027,7 @@ const getCachedTweet = async (id) => {
       setNewImage('');
     };
 
+    // Fonction pour supprimer un article
     const deleteArticle = (id) => {
       if (window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
         setArticles(articles.filter(item => item.id !== id));
@@ -1127,9 +1037,11 @@ const getCachedTweet = async (id) => {
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
+        {/* Formulaire d'ajout/édition */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-6">Gestion des Articles</h1>
           <div className="bg-gray-800 p-6 rounded-lg space-y-4">
+            {/* MODIFICATION: Titre dynamique selon mode ajout/édition */}
             <h2 className="text-2xl font-bold text-yellow-400 mb-4">
               {editingArticle ? 'Modifier l\'article' : 'Ajouter un article'}
             </h2>
@@ -1164,100 +1076,14 @@ const getCachedTweet = async (id) => {
               className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
             
-            {/* MODIFICATION: Barre d'outils de formatage */}
-            <div className="bg-gray-900 p-3 rounded-lg">
-              <p className="text-yellow-400 text-sm mb-2">Outils de formatage (sélectionnez du texte puis cliquez) :</p>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('bold')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 font-bold"
-                  title="Gras"
-                >
-                  <strong>G</strong>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('italic')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 italic"
-                  title="Italique"
-                >
-                  <em>I</em>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('underline')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 underline"
-                  title="Souligné"
-                >
-                  <u>S</u>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('h2')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-lg font-bold"
-                  title="Titre 2"
-                >
-                  H2
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('h3')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 font-bold"
-                  title="Titre 3"
-                >
-                  H3
-                </button>
-                <button
-                  type="button"
-                  onClick={() => applyFormatting('paragraph')}
-                  className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
-                  title="Paragraphe"
-                >
-                  ¶
-                </button>
-                
-                {/* Boutons de couleur */}
-                <button
-                  type="button"
-                  onClick={() => applyColor('#f59e0b')}
-                  className="w-8 h-8 rounded"
-                  style={{ backgroundColor: '#f59e0b' }}
-                  title="Jaune"
-                />
-                <button
-                  type="button"
-                  onClick={() => applyColor('#ef4444')}
-                  className="w-8 h-8 rounded"
-                  style={{ backgroundColor: '#ef4444' }}
-                  title="Rouge"
-                />
-                <button
-                  type="button"
-                  onClick={() => applyColor('#3b82f6')}
-                  className="w-8 h-8 rounded"
-                  style={{ backgroundColor: '#3b82f6' }}
-                  title="Bleu"
-                />
-                <button
-                  type="button"
-                  onClick={() => applyColor('#10b981')}
-                  className="w-8 h-8 rounded"
-                  style={{ backgroundColor: '#10b981' }}
-                  title="Vert"
-                />
-              </div>
-            </div>
-            
             <textarea
-              id="fullContentTextarea"
-              placeholder="Contenu complet de l'article (utilisez les outils de formatage ci-dessus)"
+              placeholder="Contenu complet de l'article (optionnel, sinon le résumé sera utilisé)"
               value={newFullContent}
               onChange={(e) => setNewFullContent(e.target.value)}
-              className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-64 focus:outline-none focus:ring-2 focus:ring-yellow-400 font-mono text-sm"
+              className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-64 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
-            <p className="text-gray-400 text-xs">💡 Vous pouvez aussi écrire directement du HTML</p>
             
+            {/* MODIFICATION: Boutons dynamiques selon mode ajout/édition */}
             <div className="flex space-x-4">
               {editingArticle ? (
                 <>
@@ -1288,6 +1114,7 @@ const getCachedTweet = async (id) => {
           </div>
         </div>
 
+        {/* Liste des articles existants */}
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-white mb-4">Articles existants</h2>
           {articles.map(item => (
@@ -1300,7 +1127,9 @@ const getCachedTweet = async (id) => {
                   <h3 className="text-xl font-bold text-yellow-400 mb-2">{item.title}</h3>
                   <p className="text-gray-400 mb-3">{item.date}</p>
                   <p className="text-gray-300 mb-4">{item.content.substring(0, 150)}...</p>
+                  {/* Boutons d'action */}
                   <div className="flex space-x-2">
+                    {/* MODIFICATION: Bouton de modification fonctionnel */}
                     <button 
                       onClick={() => startEdit(item)}
                       className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors"
@@ -1324,10 +1153,8 @@ const getCachedTweet = async (id) => {
       </div>
     );
   };
-  
-  
+
   // ===== RENDU PRINCIPAL =====
-  // Objectif : Structure globale de l'app avec navbar, contenu principal conditionnel et footer.
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Barre de navigation fixe */}

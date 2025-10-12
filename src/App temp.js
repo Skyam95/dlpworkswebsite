@@ -6,8 +6,11 @@ import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit,
 // Objectif : Importer l'icône X (Twitter) renommée pour éviter les conflits.
 import { Twitter as XIcon } from 'lucide-react';
 import { Tweet } from 'react-tweet';
-import { fetchTweet } from 'react-tweet/api';
-import { supabase } from './supabaseClient'; // IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+
+
+
+// IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+// import { supabase } from './supabaseClient';
 
 // ===== COMPOSANT LOGIN EXTRAIT =====
 // Objectif : Composant isolé pour la page de login, évitant les re-renders inutiles et pertes de focus sur les inputs.
@@ -158,15 +161,15 @@ const DLPWorksSite = () => {
   // Objectif : Gérer la logique de login (version simple sans Supabase pour l'instant).
   const handleLogin = useCallback(() => {
     // VERSION SIMPLE (sans Supabase pour le moment)
-    /*if (username === 'admin' && password === 'dlpworks2025') {
+    if (username === 'admin' && password === 'dlpworks2025') {
       setIsAdmin(true);
       setCurrentPage('admin-dashboard');
       alert('Connexion réussie !');
     } else {
       alert('Identifiants incorrects');
-    }*/
+    }
     
-    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)*/
+    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: username,
@@ -183,7 +186,7 @@ const DLPWorksSite = () => {
       console.error('Erreur login:', error);
       alert('Identifiants incorrects : ' + error.message);
     }
-    
+    */
   }, [username, password]);
 
   // ===== BARRE DE NAVIGATION =====
@@ -482,57 +485,51 @@ disneyLayer.addTo(map);
 
 
 
-// ===== PAGE ACTUALITÉS =====
-// Objectif : Afficher la liste des actualités avec embeds Twitter/X intégrés via react-tweet pour un rendu complet et interactif.
-const NewsPage = () => {
-  // Pas besoin de charger widgets.js manuellement ; react-tweet gère les fetches API.
+  // ===== PAGE ACTUALITÉS =====
+  // Objectif : Afficher la liste des actualités avec embeds Twitter/X intégrés via blockquote et widgets.js.
+  const NewsPage = () => {
+    // Charger le script Twitter pour l'embed
+    useEffect(() => {
+      if (!window.twttr) {
+        const script = document.createElement('script');
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.async = true;
+        script.charset = 'utf-8';
+        document.body.appendChild(script);
+      } else {
+        window.twttr.widgets.load();
+      }
+    }, [news]);
 
-// Ajoutez en haut de NewsPage
-
-// Exemple de fetch avec cache simple (utilisez un vrai cache comme Redis en prod)
-const cachedTweets = new Map();
-
-const getCachedTweet = async (id) => {
-  if (cachedTweets.has(id)) return cachedTweets.get(id);
-  const tweet = await fetchTweet(id);
-  cachedTweets.set(id, tweet);
-  return tweet;
-};
-
-// Puis, utilisez <EmbeddedTweet tweet={await getCachedTweet(id)} /> au lieu de <Tweet id={id} />
-  // Fonction utilitaire pour extraire l'ID du tweet à partir de l'URL
-  const getTweetId = (url) => {
-    const match = url.match(/status\/(\d+)/);
-    return match ? match[1] : null;
-  };
-
-  return (
-    <div className="px-4 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
-        <Newspaper className="mr-3 text-yellow-400" />
-        Actualités
-      </h1>
-      <div className="space-y-6">
-        {news.map(item => (
-          <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
-            <h2 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h2>
-            <p className="text-gray-400 mb-4">{item.date}</p>
-            <p className="text-gray-300 mb-4">{item.content}</p>
-            
-            {/* Intégration du tweet avec react-tweet : Affiche le texte complet, images, stats (vues/likes/réponses), et ouvre les liens en nouvel onglet */}
-            {item.tweet && (
-              <div className="mt-6">
-                <div className="twitter-embed-container" data-theme="dark"> {/* Thème sombre pour matcher votre site */}
-                  <Tweet id={getTweetId(item.tweet)} />
+    return (
+      <div className="px-4 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
+          <Newspaper className="mr-3 text-yellow-400" />
+          Actualités
+        </h1>
+        <div className="space-y-6">
+          {news.map(item => (
+            <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
+              <h2 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h2>
+              <p className="text-gray-400 mb-4">{item.date}</p>
+              <p className="text-gray-300 mb-4">{item.content}</p>
+              
+              {/* MODIFICATION : Intégration tweet avec blockquote complet pour embed interactif */}
+              {item.tweet && (
+                <div className="mt-6">
+                  <div className="twitter-embed-container">
+                    <blockquote className="twitter-tweet" data-theme="dark" data-dnt="true">
+                      <p lang="en" dir="ltr">[Analysis] 🚧 A 3rd Park at <a href="https://twitter.com/hashtag/DisneylandParis?src=hash&amp;ref_src=twsrc%5Etfw">#DisneylandParis</a>? 🎢<br/><br/>➡️ The amendment between Disneyland Paris and public authorities allows for the creation of a third park once annual attendance exceeds 22 million visitors (currently around 16M). A decision must be made before March 24, 2036,… <a href="{item.tweet}">pic.twitter.com/OQo7IVu0Xb</a></p>&mdash; DLP Works (@DLPWorks) <a href="{item.tweet}">October 10, 2025</a>
+                    </blockquote>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
   // ===== PAGE VUES AÉRIENNES =====
   // Objectif : Afficher la galerie de vues aériennes avec modal pour agrandissement.

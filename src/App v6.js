@@ -7,7 +7,12 @@ import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit,
 import { Twitter as XIcon } from 'lucide-react';
 import { Tweet } from 'react-tweet';
 import { fetchTweet } from 'react-tweet/api';
-import { supabase } from './supabaseClient'; // IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+
+
+
+
+// IMPORTANT: Décommentez cette ligne quand vous aurez créé supabaseClient.js
+// import { supabase } from './supabaseClient';
 
 // ===== COMPOSANT LOGIN EXTRAIT =====
 // Objectif : Composant isolé pour la page de login, évitant les re-renders inutiles et pertes de focus sur les inputs.
@@ -158,15 +163,15 @@ const DLPWorksSite = () => {
   // Objectif : Gérer la logique de login (version simple sans Supabase pour l'instant).
   const handleLogin = useCallback(() => {
     // VERSION SIMPLE (sans Supabase pour le moment)
-    /*if (username === 'admin' && password === 'dlpworks2025') {
+    if (username === 'admin' && password === 'dlpworks2025') {
       setIsAdmin(true);
       setCurrentPage('admin-dashboard');
       alert('Connexion réussie !');
     } else {
       alert('Identifiants incorrects');
-    }*/
+    }
     
-    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)*/
+    /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: username,
@@ -183,7 +188,7 @@ const DLPWorksSite = () => {
       console.error('Erreur login:', error);
       alert('Identifiants incorrects : ' + error.message);
     }
-    
+    */
   }, [username, password]);
 
   // ===== BARRE DE NAVIGATION =====
