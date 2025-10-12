@@ -156,7 +156,7 @@ const DLPWorksSite = () => {
 
   // ===== FONCTION DE CONNEXION =====
   // Objectif : Gérer la logique de login (version simple sans Supabase pour l'instant).
-  const handleLogin = useCallback(() => {
+  const handleLogin = useCallback(async () => {
     // VERSION SIMPLE (sans Supabase pour le moment)
     /*if (username === 'admin' && password === 'dlpworks2025') {
       setIsAdmin(true);
