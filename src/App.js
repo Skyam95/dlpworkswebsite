@@ -100,11 +100,11 @@ const DLPWorksSite = () => {
   // Objectif : Définir des icônes personnalisées avec SVG pour X (Twitter) et Threads.
 
   // Composant icône X (Twitter) - Logo officiel
-  const XIconCustom = ({ size = 24, className = "" }) => (
+  /*const XIconCustom = ({ size = 24, className = "" }) => (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
     </svg>
-  );
+  );*/
 
   // Composant icône Threads - Logo officiel corrigé (le @ stylisé)
   const ThreadsIcon = ({ size = 24, className = "" }) => (
@@ -168,7 +168,7 @@ const DLPWorksSite = () => {
     
     /* VERSION AVEC SUPABASE (à décommenter quand Supabase est configuré)*/
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: username,
         password: password,
       });
@@ -492,12 +492,12 @@ const NewsPage = () => {
 // Exemple de fetch avec cache simple (utilisez un vrai cache comme Redis en prod)
 const cachedTweets = new Map();
 
-const getCachedTweet = async (id) => {
+/*const getCachedTweet = async (id) => {
   if (cachedTweets.has(id)) return cachedTweets.get(id);
   const tweet = await fetchTweet(id);
   cachedTweets.set(id, tweet);
   return tweet;
-};
+};*/
 
 // Puis, utilisez <EmbeddedTweet tweet={await getCachedTweet(id)} /> au lieu de <Tweet id={id} />
   // Fonction utilitaire pour extraire l'ID du tweet à partir de l'URL
