@@ -1,24 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Twitter as XIcon } from 'lucide-react';
-
-// ===== COMPONENT TWEET =====
-const Tweet = ({ id }) => {
-  useEffect(() => {
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load();
-    }
-  }, [id]);
-
-  if (!id) return null;
-  return (
-    <div className="flex justify-center my-4">
-      <blockquote className="twitter-tweet" data-theme="dark" data-width="550">
-        <a href={`https://twitter.com/x/status/${id}`}>Loading tweet...</a>
-      </blockquote>
-    </div>
-  );
-};
 
 // ===== COMPONENT AD BANNER =====
 const AdBanner = ({ slot = "test", format = "auto", isTest = true }) => {
@@ -164,7 +146,6 @@ const DLPWorksSite = () => {
   const [newsPage, setNewsPage] = useState(1);
   const [articlesPage, setArticlesPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
-  const [isAdTest, setIsAdTest] = useState(true);
 
   const ThreadsIcon = ({ size = 24, className = "" }) => (
     <svg width={size} height={size} viewBox="0 0 192 192" fill="currentColor" className={className}>
@@ -293,7 +274,7 @@ const DLPWorksSite = () => {
           </div>
         </section>
 
-        <AdBanner slot="1234567890" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="1234567890" format="horizontal" isTest={true} />
 
         <section className="px-4 max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
@@ -318,7 +299,7 @@ const DLPWorksSite = () => {
           </div>
         </section>
 
-        <AdBanner slot="2345678901" format="auto" isTest={isAdTest} />
+        <AdBanner slot="2345678901" format="auto" isTest={true} />
 
         <section className="px-4 max-w-7xl mx-auto pb-16">
           <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
@@ -339,7 +320,7 @@ const DLPWorksSite = () => {
           </div>
         </section>
 
-        <AdBanner slot="3456789012" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="3456789012" format="horizontal" isTest={true} />
       </div>
     );
   };
@@ -407,7 +388,7 @@ disneyLayer.addTo(map);
           Interactive Map of Disneyland Paris
         </h1>
         
-        <AdBanner slot="4567890123" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="4567890123" format="horizontal" isTest={true} />
         
         <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
           <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
@@ -419,7 +400,7 @@ disneyLayer.addTo(map);
           </div>
         </div>
         
-        <AdBanner slot="5678901234" format="auto" isTest={isAdTest} />
+        <AdBanner slot="5678901234" format="auto" isTest={true} />
       </div>
     );
   };
@@ -447,7 +428,7 @@ disneyLayer.addTo(map);
           News ({news.length} total)
         </h1>
         
-        <AdBanner slot="6789012345" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="6789012345" format="horizontal" isTest={true} />
         
         <div className="space-y-6">
           {currentNews.map(item => (
@@ -468,7 +449,7 @@ disneyLayer.addTo(map);
 
         {totalPages > 1 && <Pagination currentPage={newsPage} totalPages={totalPages} onPageChange={setNewsPage} />}
         
-        <AdBanner slot="7890123456" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="7890123456" format="horizontal" isTest={true} />
       </div>
     );
   };
@@ -486,7 +467,7 @@ disneyLayer.addTo(map);
             Articles ({articles.length} total)
           </h1>
           
-          <AdBanner slot="0123456789" format="horizontal" isTest={isAdTest} />
+          <AdBanner slot="0123456789" format="horizontal" isTest={true} />
           
           <div className="space-y-8">
             {currentArticles.map(item => (
@@ -504,7 +485,7 @@ disneyLayer.addTo(map);
 
           {totalPages > 1 && <Pagination currentPage={articlesPage} totalPages={totalPages} onPageChange={setArticlesPage} />}
           
-          <AdBanner slot="1234567890" format="horizontal" isTest={isAdTest} />
+          <AdBanner slot="1234567890" format="horizontal" isTest={true} />
         </div>
 
         {selectedArticle && (
@@ -536,7 +517,7 @@ disneyLayer.addTo(map);
           Aerial Views
         </h1>
         
-        <AdBanner slot="8901234567" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="8901234567" format="horizontal" isTest={true} />
         
         <div className="grid md:grid-cols-2 gap-6">
           {aerialViews.map(item => (
@@ -552,7 +533,7 @@ disneyLayer.addTo(map);
           ))}
         </div>
         
-        <AdBanner slot="9012345678" format="auto" isTest={isAdTest} />
+        <AdBanner slot="9012345678" format="auto" isTest={true} />
       </div>
 
       {selectedImage && (
@@ -579,7 +560,7 @@ disneyLayer.addTo(map);
         Contact & Legal
       </h1>
       
-      <AdBanner slot="2345678901" format="horizontal" isTest={isAdTest} />
+      <AdBanner slot="2345678901" format="horizontal" isTest={true} />
       
       <div className="bg-gradient-to-br from-gray-900 to-black p-8 rounded-lg shadow-2xl space-y-6 text-gray-300">
         <section>
@@ -600,7 +581,7 @@ disneyLayer.addTo(map);
         </section>
       </div>
       
-      <AdBanner slot="3456789012" format="auto" isTest={isAdTest} />
+      <AdBanner slot="3456789012" format="auto" isTest={true} />
     </div>
   );
 
