@@ -419,7 +419,7 @@ disneyLayer.addTo(map);
       } else if (window.twttr && window.twttr.widgets) {
         window.twttr.widgets.load();
       }
-    }, [newsPage]);
+    }, []);
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
