@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';import { Twitter as XIcon } from 'lucide-react';
+import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';import { Twitter as XIcon } from 'lucide-react';
 
 // ===== COMPONENT AD BANNER =====
 const AdBanner = ({ slot = "test", format = "auto", isTest = true }) => {
@@ -145,7 +145,6 @@ const DLPWorksSite = () => {
   const [newsPage, setNewsPage] = useState(1);
   const [articlesPage, setArticlesPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
-  const [mapHeight, setMapHeight] = useState(500);
 
 
   const ThreadsIcon = ({ size = 24, className = "" }) => (
@@ -598,9 +597,7 @@ const PhotosPage = () => (
     </div>
   );
 
-const [mapAnnotations, setMapAnnotations] = useState([
-  { id: 1, lat: 48.8722, lng: 2.7758, title: "Magic Kingdom", description: "The main park", type: "attraction", photo: null, tweetLink: null },
-]);
+
 
   const AdminNews = () => {
     const [newTitle, setNewTitle] = useState('');
