@@ -356,7 +356,7 @@ const MapPage = () => {
 </head>
 <body>
 <div id="map"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const TILE_ROOT = 'https://media.disneylandparis.com/mapTiles/images';
 const MIN_Z = 14;
@@ -391,7 +391,7 @@ const disneyLayer = L.tileLayer(\`\${TILE_ROOT}/{z}/{x}/{y}.jpg\`, {
 });
 
 disneyLayer.addTo(map);
-<\/script>
+</script>
 </body>
 </html>
   `;
