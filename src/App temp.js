@@ -1,24 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, LogOut, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
 import { Twitter as XIcon } from 'lucide-react';
-
-// ===== COMPOSANT TWEET =====
-const Tweet = ({ id }) => {
-  useEffect(() => {
-    if (window.twttr && window.twttr.widgets) {
-      window.twttr.widgets.load();
-    }
-  }, [id]);
-
-  if (!id) return null;
-  return (
-    <div className="flex justify-center my-4">
-      <blockquote className="twitter-tweet" data-theme="dark" data-width="550">
-        <a href={`https://twitter.com/x/status/${id}`}>Loading tweet...</a>
-      </blockquote>
-    </div>
-  );
-};
 
 // ===== COMPOSANT BANNIÈRE PUBLICITAIRE =====
 const AdBanner = ({ slot = "test", format = "auto", isTest = true }) => {
@@ -27,18 +9,17 @@ const AdBanner = ({ slot = "test", format = "auto", isTest = true }) => {
       <div className="my-8 flex justify-center">
         <div className="bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-yellow-400 rounded-lg p-6 max-w-4xl w-full">
           <div className="text-center">
-            <p className="text-yellow-400 font-bold text-lg mb-2">🎯 PUBLICITÉ TEST</p>
+            <p className="text-yellow-400 font-bold text-lg mb-2">🎯 TEST AD</p>
             <p className="text-gray-300 text-sm mb-4">Slot: {slot} | Format: {format}</p>
             <div className="bg-gray-900 rounded p-8 text-gray-400">
-              <p className="text-2xl mb-2">📢 Emplacement publicitaire</p>
-              <p className="text-sm">En production, une vraie publicité Google AdSense s'affichera ici</p>
+              <p className="text-2xl mb-2">📢 Ad Placement</p>
+              <p className="text-sm">In production, a real Google AdSense ad will appear here</p>
             </div>
           </div>
         </div>
       </div>
     );
   }
-
   return (
     <div className="my-8 flex justify-center">
       <ins
@@ -58,11 +39,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
-    
     if (totalPages <= maxVisible) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
         pages.push(1, 2, 3, 4, '...', totalPages);
@@ -77,30 +55,15 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className="flex items-center justify-center space-x-2 my-8">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className={`p-2 rounded-lg ${currentPage === 1 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:shadow-lg'}`}
-      >
+      <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} className={`p-2 rounded-lg ${currentPage === 1 ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:shadow-lg'}`}>
         <ChevronLeft size={20} />
       </button>
-
       {getPageNumbers().map((page, index) => (
-        <button
-          key={index}
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          disabled={page === '...'}
-          className={`px-4 py-2 rounded-lg font-bold ${page === currentPage ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : page === '...' ? 'bg-transparent text-gray-400 cursor-default' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
-        >
+        <button key={index} onClick={() => typeof page === 'number' && onPageChange(page)} disabled={page === '...'} className={`px-4 py-2 rounded-lg font-bold ${page === currentPage ? 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black' : page === '...' ? 'bg-transparent text-gray-400 cursor-default' : 'bg-gray-800 text-white hover:bg-gray-700'}`}>
           {page}
         </button>
       ))}
-
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`p-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:shadow-lg'}`}
-      >
+      <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} className={`p-2 rounded-lg ${currentPage === totalPages ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:shadow-lg'}`}>
         <ChevronRight size={20} />
       </button>
     </div>
@@ -113,40 +76,13 @@ const LoginPage = ({ username, setUsername, password, setPassword, onLogin }) =>
     <div className="bg-gradient-to-br from-gray-900 to-black p-8 rounded-lg shadow-2xl">
       <h1 className="text-3xl font-bold mb-8 text-white flex items-center justify-center">
         <User className="mr-3 text-yellow-400" />
-        Administration
+        Admin
       </h1>
       <div className="space-y-6">
-        <div>
-          <label className="block text-gray-300 mb-2">Identifiant</label>
-          <input
-            type="email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-            placeholder="admin@dlpworks.com"
-            className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-300 mb-2">Mot de passe</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && onLogin()}
-            placeholder="••••••••"
-            className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          />
-        </div>
-        <button
-          onClick={onLogin}
-          className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-yellow-400/50 transition-all"
-        >
-          Se connecter
-        </button>
-        <p className="text-xs text-gray-500 text-center">
-          Demo: admin@dlpworks.com / dlpworks2025
-        </p>
+        <input type="email" value={username} onChange={(e) => setUsername(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && onLogin()} placeholder="admin@dlpworks.com" className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && onLogin()} placeholder="••••••••" className="w-full px-4 py-2 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+        <button onClick={onLogin} className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold py-3 rounded-lg hover:shadow-lg hover:shadow-yellow-400/50 transition-all">Sign In</button>
+        <p className="text-xs text-gray-500 text-center">Demo: admin@dlpworks.com / dlpworks2025</p>
       </div>
     </div>
   </div>
@@ -163,8 +99,8 @@ const DLPWorksSite = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [newsPage, setNewsPage] = useState(1);
   const [articlesPage, setArticlesPage] = useState(1);
+  const [mapFullscreen, setMapFullscreen] = useState(false);
   const ITEMS_PER_PAGE = 10;
-  const [isAdTest, setIsAdTest] = useState(true);
 
   const ThreadsIcon = ({ size = 24, className = "" }) => (
     <svg width={size} height={size} viewBox="0 0 192 192" fill="currentColor" className={className}>
@@ -173,71 +109,93 @@ const DLPWorksSite = () => {
   );
 
   const [news, setNews] = useState([
-    { id: 1, title: "Nouvelle attraction annoncée", date: "2025-10-01", tweet: "1910969757756449015", content: "Disneyland Paris annonce une nouvelle attraction..." },
-    { id: 2, title: "Rénovation du Château", date: "2025-09-28", tweet: "1721163361692327977", content: "Les travaux de rénovation avancent..." },
-    { id: 3, title: "Halloween à Disneyland", date: "2025-09-25", tweet: "1910969757756449015", content: "Découvrez les nouveautés pour Halloween..." },
-    { id: 4, title: "Nouveaux spectacles", date: "2025-09-20", tweet: "1721163361692327977", content: "Des spectacles magiques arrivent..." },
-    { id: 5, title: "Nouveau restaurant", date: "2025-09-15", tweet: "1910969757756449015", content: "Un restaurant gastronomique ouvre ses portes..." },
-    { id: 6, title: "Festival du Roi Lion", date: "2025-09-10", tweet: "1721163361692327977", content: "Célébrez le Roi Lion avec nous..." },
-    { id: 7, title: "Parade des princesses", date: "2025-09-05", tweet: "1910969757756449015", content: "Une parade féerique arrive..." },
-    { id: 8, title: "Marvel Festival", date: "2025-08-30", tweet: "1721163361692327977", content: "Les super-héros envahissent le parc..." },
-    { id: 9, title: "Boutique Star Wars", date: "2025-08-25", tweet: "1910969757756449015", content: "Découvrez la galaxie lointaine..." },
-    { id: 10, title: "Concert Disney", date: "2025-08-20", tweet: "1721163361692327977", content: "Un concert exceptionnel..." },
-    { id: 11, title: "Rencontre Mickey", date: "2025-08-15", tweet: "1910969757756449015", content: "Mickey vous attend..." },
-    { id: 12, title: "Feu d'artifice", date: "2025-08-10", tweet: "1721163361692327977", content: "Le plus grand feu d'artifice..." }
+    { id: 1, title: "New attraction announced", date: "2025-10-01", tweet: "1910969757756449015", content: "Disneyland Paris announces a new attraction..." },
+    { id: 2, title: "Castle renovation", date: "2025-09-28", tweet: "1721163361692327977", content: "Renovation work is progressing..." },
+    { id: 3, title: "Halloween at Disneyland", date: "2025-09-25", tweet: "1910969757756449015", content: "Discover Halloween novelties..." },
+    { id: 4, title: "New shows", date: "2025-09-20", tweet: "1721163361692327977", content: "Magical shows arrive..." },
+    { id: 5, title: "New restaurant opening", date: "2025-09-15", tweet: "1910969757756449015", content: "A gourmet restaurant opens its doors..." },
+    { id: 6, title: "Lion King Festival", date: "2025-09-10", tweet: "1721163361692327977", content: "Celebrate the Lion King with us..." },
+    { id: 7, title: "Princess Parade", date: "2025-09-05", tweet: "1910969757756449015", content: "A magical parade arrives..." },
+    { id: 8, title: "Marvel Festival", date: "2025-08-30", tweet: "1721163361692327977", content: "Superheroes invade the park..." },
+    { id: 9, title: "Star Wars shop", date: "2025-08-25", tweet: "1910969757756449015", content: "Discover the galaxy..." },
+    { id: 10, title: "Disney Concert", date: "2025-08-20", tweet: "1721163361692327977", content: "An exceptional concert..." },
+    { id: 11, title: "Mickey meeting", date: "2025-08-15", tweet: "1910969757756449015", content: "Mickey awaits you..." },
+    { id: 12, title: "Spectacular fireworks", date: "2025-08-10", tweet: "1721163361692327977", content: "The biggest fireworks of the year..." }
   ]);
 
-  const [aerialViews] = useState([
-    { id: 1, title: "Vue du Château", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/n033755_2027jun24_world_main-street-usa-castle_2-1_tcm808-270423.jpg?w=1200&f=webp" },
-    { id: 2, title: "Avengers Campus", date: "2025-09-25", image: "https://media.disneylandparis.com/d4th/fr-fr/images/hd16242_2050dec31_world_avengers-campus-key-visual_16-9_tcm808-236755.jpg?w=960" }
+  const [aerialViews, setAerialViews] = useState([
+    { id: 1, title: "Castle View", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/n033755_2027jun24_world_main-street-usa-castle_2-1_tcm808-270423.jpg?w=1200&f=webp", folder: "2025-09-30" },
+    { id: 2, title: "Avengers Campus", date: "2025-09-30", image: "https://media.disneylandparis.com/d4th/fr-fr/images/hd16242_2050dec31_world_avengers-campus-key-visual_16-9_tcm808-236755.jpg?w=960", folder: "2025-09-30" },
+    { id: 3, title: "Main Street", date: "2025-09-25", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", folder: "2025-09-25" }
   ]);
 
   const [articles, setArticles] = useState([
-    { id: 1, title: "L'histoire de Disneyland Paris", date: "2025-09-20", content: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Depuis son ouverture en 1992, Disneyland Paris n'a cessé d'évoluer et de faire rêver des millions de visiteurs." },
-    { id: 2, title: "Les secrets des Imagineers", date: "2025-09-15", content: "Découvrez les coulisses de la création des attractions...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Les Imagineers sont les créateurs de magie derrière chaque attraction." },
-    { id: 3, title: "Les attractions classiques", date: "2025-09-10", content: "Retour sur les attractions emblématiques...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Les attractions classiques font partie de l'ADN du parc." },
-    { id: 4, title: "La magie de Noël", date: "2025-09-05", content: "Chaque année, le parc se transforme...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Noël à Disneyland Paris est une expérience unique." },
-    { id: 5, title: "Les restaurants du parc", date: "2025-08-30", content: "Guide complet des meilleures adresses...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "La gastronomie fait partie de l'expérience Disney." },
-    { id: 6, title: "Les hôtels Disney", date: "2025-08-25", content: "Séjournez dans la magie...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Les hôtels Disney offrent une immersion totale." },
-    { id: 7, title: "Conseils pour visiter", date: "2025-08-20", content: "Tous nos conseils pour profiter...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Une bonne préparation est la clé d'une visite réussie." },
-    { id: 8, title: "Les spectacles", date: "2025-08-15", content: "Guide des spectacles et parades...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Les spectacles sont au cœur de l'expérience Disney." },
-    { id: 9, title: "Parc Walt Disney Studios", date: "2025-08-10", content: "Découvrez l'évolution du second parc...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Le Parc Walt Disney Studios a connu de nombreuses transformations." },
-    { id: 10, title: "Les boutiques Disney", date: "2025-08-05", content: "Shopping à Disneyland Paris...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Le shopping fait partie de l'expérience magique." },
-    { id: 11, title: "Les événements spéciaux", date: "2025-07-30", content: "Marathon, soirées privées, festivals...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Disneyland Paris organise régulièrement des événements uniques." },
-    { id: 12, title: "30 ans de magie", date: "2025-07-25", content: "Retour sur trois décennies...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "En 2022, Disneyland Paris a célébré ses 30 ans." }
+    { id: 1, title: "History of Disneyland Paris", date: "2025-09-20", content: "Since its opening in 1992, Disneyland Paris has continued to evolve...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Since its opening in 1992, Disneyland Paris has fascinated millions of visitors." },
+    { id: 2, title: "Imagineers Secrets", date: "2025-09-15", content: "Discover the creation process of attractions...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Imagineers are the creators of magic behind every attraction." },
+    { id: 3, title: "Classic attractions", date: "2025-09-10", content: "Classic attractions are part of the park's DNA...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "These timeless attractions have delighted generations." },
+    { id: 4, title: "Christmas Magic", date: "2025-09-05", content: "The park transforms into a winter wonderland...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Christmas at Disneyland Paris is a unique experience." },
+    { id: 5, title: "Park Restaurants", date: "2025-08-30", content: "Complete guide to dining options...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Gastronomy is part of the Disney experience." },
+    { id: 6, title: "Disney Hotels", date: "2025-08-25", content: "Stay in the magic with themed hotels...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Disney hotels offer total immersion in magic." },
+    { id: 7, title: "Visitor Tips", date: "2025-08-20", content: "Tips to make the most of your visit...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Good preparation is key to a successful visit." },
+    { id: 8, title: "Must-see shows", date: "2025-08-15", content: "Guide to shows and parades...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Shows are at the heart of the Disney experience." },
+    { id: 9, title: "Walt Disney Studios Park", date: "2025-08-10", content: "Evolution of the second park...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Walt Disney Studios Park has undergone many transformations." },
+    { id: 10, title: "Disney Shops", date: "2025-08-05", content: "Shopping guide at Disneyland Paris...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "Shopping is part of the magical experience." },
+    { id: 11, title: "Special events", date: "2025-07-30", content: "Marathon, private evenings, festivals...", image: "https://cdn1.parksmedia.wdprapps.disney.com/media/blog/wp-content/uploads/2024/04/fghgfaghgfasghjhgasghjhgfsa.jpg", fullContent: "Disneyland Paris regularly organizes unique events." },
+    { id: 12, title: "30 years of magic", date: "2025-07-25", content: "30 years of emotions and memories...", image: "https://news.disneylandparis.com//app/uploads/2025/04/Adventure-Way-4-2-scaled.jpeg", fullContent: "In 2022, Disneyland Paris celebrated 30 years." }
   ]);
+
+  const [mapAnnotations, setMapAnnotations] = useState([
+    { id: 1, lat: 48.8722, lng: 2.7758, title: "Magic Kingdom", description: "The main park", type: "attraction", photo: null, tweetLink: null },
+  ]);
+
+  const [analyticsData] = useState({
+    pageViews: 15234,
+    uniqueVisitors: 3421,
+    avgSessionDuration: '3:45',
+    bounceRate: 32.5,
+    topPages: [
+      { page: '/home', views: 4521 },
+      { page: '/articles', views: 3892 },
+      { page: '/map', views: 2341 }
+    ],
+    deviceBreakdown: {
+      desktop: 65,
+      mobile: 30,
+      tablet: 5
+    }
+  });
 
   const handleLogin = useCallback(() => {
     if (username === 'admin@dlpworks.com' && password === 'dlpworks2025') {
       setIsAdmin(true);
       setCurrentPage('admin-dashboard');
-      alert('Connexion réussie !');
+      alert('Login successful!');
     } else {
-      alert('Identifiants incorrects');
+      alert('Incorrect credentials');
     }
   }, [username, password]);
 
+  // ===== BARRE DE NAVIGATION =====
   const NavBar = () => (
     <nav className="bg-black text-white fixed w-full top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
-            <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
-              DLP Works
-            </span>
+            <img src="https://i.ibb.co/Z6q3W8Mv/LOGO-alphabackground.png" alt="DLP Works Logo" className="w-10 h-10 rounded-full object-cover shadow-lg" onError={(e) => e.target.style.display = 'none'} />
+            <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">DLP Works</span>
           </div>
           
           <div className="hidden md:flex space-x-6">
-            <button onClick={() => setCurrentPage('home')} className={`hover:text-yellow-400 ${currentPage === 'home' ? 'text-yellow-400' : ''}`}>Accueil</button>
-            <button onClick={() => setCurrentPage('map')} className={`hover:text-yellow-400 ${currentPage === 'map' ? 'text-yellow-400' : ''}`}>Carte</button>
-            <button onClick={() => setCurrentPage('news')} className={`hover:text-yellow-400 ${currentPage === 'news' ? 'text-yellow-400' : ''}`}>Actualités</button>
+            <button onClick={() => setCurrentPage('home')} className={`hover:text-yellow-400 ${currentPage === 'home' ? 'text-yellow-400' : ''}`}>Home</button>
+            <button onClick={() => setCurrentPage('map')} className={`hover:text-yellow-400 ${currentPage === 'map' ? 'text-yellow-400' : ''}`}>Map</button>
+            <button onClick={() => setCurrentPage('news')} className={`hover:text-yellow-400 ${currentPage === 'news' ? 'text-yellow-400' : ''}`}>News</button>
             <button onClick={() => setCurrentPage('aerial')} className={`hover:text-yellow-400 ${currentPage === 'aerial' ? 'text-yellow-400' : ''}`}>Photos</button>
             <button onClick={() => setCurrentPage('articles')} className={`hover:text-yellow-400 ${currentPage === 'articles' ? 'text-yellow-400' : ''}`}>Articles</button>
             <button onClick={() => setCurrentPage('contact')} className={`hover:text-yellow-400 ${currentPage === 'contact' ? 'text-yellow-400' : ''}`}>Contact</button>
             {isAdmin ? (
               <>
                 <button onClick={() => setCurrentPage('admin-dashboard')} className={`hover:text-yellow-400 ${currentPage === 'admin-dashboard' ? 'text-yellow-400' : ''}`}>Admin</button>
-                <button onClick={() => { setIsAdmin(false); setCurrentPage('home'); }} className="text-yellow-400 hover:text-yellow-300">Déconnexion</button>
+                <button onClick={() => { setIsAdmin(false); setCurrentPage('home'); }} className="text-yellow-400 hover:text-yellow-300">Logout</button>
               </>
             ) : (
               <button onClick={() => setCurrentPage('login')} className={`hover:text-yellow-400 ${currentPage === 'login' ? 'text-yellow-400' : ''}`}>Admin</button>
@@ -252,7 +210,21 @@ const DLPWorksSite = () => {
     </nav>
   );
 
+  // Pages principales - HomePage, MapPage, NewsPage, ArticlesPage, AerialPage, ContactPage restent identiques au fichier précédent
+  // AdminDashboard, AdminNews, AdminAerial, AdminArticles restent identiques au fichier précédent
+
   const HomePage = () => {
+    useEffect(() => {
+      if (!window.twttr) {
+        const script = document.createElement('script');
+        script.src = 'https://platform.twitter.com/widgets.js';
+        script.async = true;
+        document.body.appendChild(script);
+      } else if (window.twttr && window.twttr.widgets) {
+        window.twttr.widgets.load();
+      }
+    }, []);
+
     return (
       <div className="space-y-16">
         <section className="text-center py-20 bg-gradient-to-b from-black via-gray-900 to-black">
@@ -260,7 +232,7 @@ const DLPWorksSite = () => {
             DLP Works
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 px-4">
-            La communauté passionnée qui suit les coulisses de Disneyland Paris
+            The passionate community following Disneyland Paris behind the scenes
           </p>
           
           <div className="flex justify-center space-x-6">
@@ -282,31 +254,37 @@ const DLPWorksSite = () => {
           </div>
         </section>
 
-        <AdBanner slot="1234567890" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="1234567890" format="horizontal" isTest={true} />
 
         <section className="px-4 max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
             <Newspaper className="mr-3 text-yellow-400" />
-            Dernières Actualités
+            Latest News
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {news.slice(0, 2).map(item => (
               <div key={item.id} onClick={() => setCurrentPage('news')} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2 cursor-pointer">
                 <h3 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h3>
                 <p className="text-gray-400 mb-4">{item.date}</p>
-                <p className="text-gray-300">{item.content}</p>
-                {item.tweet && <div className="mt-6"><Tweet id={item.tweet} /></div>}
+                <p className="text-gray-300 mb-4">{item.content}</p>
+                {item.tweet && (
+                  <div className="mt-6 twitter-embed-container" data-theme="dark">
+                    <blockquote className="twitter-tweet" data-width="550">
+                      <a href={`https://twitter.com/x/status/${item.tweet}`}>Loading tweet...</a>
+                    </blockquote>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </section>
 
-        <AdBanner slot="2345678901" format="auto" isTest={isAdTest} />
+        <AdBanner slot="2345678901" format="auto" isTest={true} />
 
         <section className="px-4 max-w-7xl mx-auto pb-16">
           <h2 className="text-4xl font-bold mb-8 text-white flex items-center">
             <Pencil className="mr-3 text-yellow-400" />
-            Articles Récents
+            Recent Articles
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             {articles.slice(0, 2).map(item => (
@@ -316,20 +294,13 @@ const DLPWorksSite = () => {
                   <h3 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h3>
                   <p className="text-gray-400 mb-4">{item.date}</p>
                   <p className="text-gray-300">{item.content}</p>
-                  {item.tweet && (
-                    <div className="mt-6 twitter-embed-container" data-theme="dark">
-                      <blockquote className="twitter-tweet" data-width="550">
-                        <a href={`https://twitter.com/x/status/${item.tweet}`}>Loading tweet...</a>
-                      </blockquote>
-                    </div>
-                  )}
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        <AdBanner slot="3456789012" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="3456789012" format="horizontal" isTest={true} />
       </div>
     );
   };
@@ -337,11 +308,11 @@ const DLPWorksSite = () => {
   const MapPage = () => {
     const mapHTML = `
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Plan interactif Disneyland Paris</title>
+  <title>Interactive Map - Disneyland Paris</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
   <style>
     html, body { margin:0; padding:0; height:100%; background:#e0e0e0; }
@@ -394,22 +365,22 @@ disneyLayer.addTo(map);
       <div className="px-4 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
           <MapPin className="mr-3 text-yellow-400" />
-          Carte Interactive de Disneyland Paris
+          Interactive Map of Disneyland Paris
         </h1>
         
-        <AdBanner slot="4567890123" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="4567890123" format="horizontal" isTest={true} />
         
         <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
           <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
             <iframe
               srcDoc={mapHTML}
               style={{ width: '100%', height: '100%', border: 'none' }}
-              title="Carte Interactive Disneyland Paris"
+              title="Interactive Map Disneyland Paris"
             />
           </div>
         </div>
         
-        <AdBanner slot="5678901234" format="auto" isTest={isAdTest} />
+        <AdBanner slot="5678901234" format="auto" isTest={true} />
       </div>
     );
   };
@@ -420,7 +391,6 @@ disneyLayer.addTo(map);
     const currentNews = news.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     useEffect(() => {
-      // Charger le script Twitter pour les widgets tweets
       if (!window.twttr) {
         const script = document.createElement('script');
         script.src = 'https://platform.twitter.com/widgets.js';
@@ -429,19 +399,19 @@ disneyLayer.addTo(map);
       } else if (window.twttr && window.twttr.widgets) {
         window.twttr.widgets.load();
       }
-    }, [newsPage]);
+    }, []);
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
           <Newspaper className="mr-3 text-yellow-400" />
-          Actualités ({news.length} total)
+          News ({news.length} total)
         </h1>
         
-        <AdBanner slot="6789012345" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="6789012345" format="horizontal" isTest={true} />
         
         <div className="space-y-6">
-          {currentNews.map((item, index) => (
+          {currentNews.map(item => (
             <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
               <h2 className="text-2xl font-bold text-yellow-400 mb-2">{item.title}</h2>
               <p className="text-gray-400 mb-4">{item.date}</p>
@@ -459,7 +429,7 @@ disneyLayer.addTo(map);
 
         {totalPages > 1 && <Pagination currentPage={newsPage} totalPages={totalPages} onPageChange={setNewsPage} />}
         
-        <AdBanner slot="7890123456" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="7890123456" format="horizontal" isTest={true} />
       </div>
     );
   };
@@ -477,7 +447,7 @@ disneyLayer.addTo(map);
             Articles ({articles.length} total)
           </h1>
           
-          <AdBanner slot="0123456789" format="horizontal" isTest={isAdTest} />
+          <AdBanner slot="0123456789" format="horizontal" isTest={true} />
           
           <div className="space-y-8">
             {currentArticles.map(item => (
@@ -487,7 +457,7 @@ disneyLayer.addTo(map);
                   <h2 className="text-3xl font-bold text-yellow-400 mb-2">{item.title}</h2>
                   <p className="text-gray-400 mb-4">{item.date}</p>
                   <p className="text-gray-300">{item.content}</p>
-                  <p className="text-yellow-400 mt-4">Cliquez pour lire l'article complet →</p>
+                  <p className="text-yellow-400 mt-4">Click to read full article →</p>
                 </div>
               </div>
             ))}
@@ -495,7 +465,7 @@ disneyLayer.addTo(map);
 
           {totalPages > 1 && <Pagination currentPage={articlesPage} totalPages={totalPages} onPageChange={setArticlesPage} />}
           
-          <AdBanner slot="1234567890" format="horizontal" isTest={isAdTest} />
+          <AdBanner slot="1234567890" format="horizontal" isTest={true} />
         </div>
 
         {selectedArticle && (
@@ -509,7 +479,7 @@ disneyLayer.addTo(map);
                 <div className="p-8">
                   <h1 className="text-4xl font-bold text-yellow-400 mb-4">{selectedArticle.title}</h1>
                   <p className="text-gray-400 mb-6">{selectedArticle.date}</p>
-                  <div className="text-gray-300 text-lg leading-relaxed">{selectedArticle.fullContent}</div>
+                  <div className="text-gray-300 text-lg leading-relaxed prose prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: selectedArticle.fullContent.replace(/\n/g, '<br />') }} />
                 </div>
               </div>
             </div>
@@ -524,10 +494,10 @@ disneyLayer.addTo(map);
       <div className="px-4 max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
           <Camera className="mr-3 text-yellow-400" />
-          Vues Aériennes
+          Aerial Views
         </h1>
         
-        <AdBanner slot="8901234567" format="horizontal" isTest={isAdTest} />
+        <AdBanner slot="8901234567" format="horizontal" isTest={true} />
         
         <div className="grid md:grid-cols-2 gap-6">
           {aerialViews.map(item => (
@@ -543,7 +513,7 @@ disneyLayer.addTo(map);
           ))}
         </div>
         
-        <AdBanner slot="9012345678" format="auto" isTest={isAdTest} />
+        <AdBanner slot="9012345678" format="auto" isTest={true} />
       </div>
 
       {selectedImage && (
@@ -567,53 +537,67 @@ disneyLayer.addTo(map);
     <div className="px-4 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
         <Mail className="mr-3 text-yellow-400" />
-        Contact & Mentions Légales
+        Contact & Legal
       </h1>
       
-      <AdBanner slot="2345678901" format="horizontal" isTest={isAdTest} />
+      <AdBanner slot="2345678901" format="horizontal" isTest={true} />
       
       <div className="bg-gradient-to-br from-gray-900 to-black p-8 rounded-lg shadow-2xl space-y-6 text-gray-300">
         <section>
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">À propos de DLP Works</h2>
-          <p>DLP Works est une communauté de passionnés qui suit l'évolution de Disneyland Paris.</p>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">About DLP Works</h2>
+          <p>DLP Works is a community of passionate fans following the evolution of Disneyland Paris.</p>
         </section>
         
         <section>
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Mentions Légales</h2>
-          <p className="mb-2"><strong>Nom :</strong> DLP Works</p>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Legal Information</h2>
+          <p className="mb-2"><strong>Name :</strong> DLP Works</p>
           <p className="mb-2"><strong>Contact :</strong> contact@dlpworks.com</p>
-          <p className="mb-2"><strong>Hébergeur :</strong> Netlify</p>
+          <p className="mb-2"><strong>Host :</strong> Netlify</p>
         </section>
         
         <section>
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Propriété Intellectuelle</h2>
-          <p>Ce site est géré par des fans et n'est pas affilié à The Walt Disney Company ou Disneyland Paris.</p>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Intellectual Property</h2>
+          <p>This site is managed by fans and is not affiliated with The Walt Disney Company or Disneyland Paris.</p>
         </section>
       </div>
       
-      <AdBanner slot="3456789012" format="auto" isTest={isAdTest} />
+      <AdBanner slot="3456789012" format="auto" isTest={true} />
     </div>
   );
 
   const AdminDashboard = () => (
     <div className="px-4 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-white">Espace Administrateur</h1>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <h1 className="text-4xl font-bold mb-8 text-white">Admin Dashboard</h1>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <button onClick={() => setCurrentPage('admin-map')} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2">
+          <div className="text-yellow-400 mb-4 text-3xl"><MapPin size={32} /></div>
+          <h3 className="text-xl font-bold text-white mb-2">Map</h3>
+          <p className="text-gray-400">Manage map annotations</p>
+        </button>
         <button onClick={() => setCurrentPage('admin-news')} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2">
           <div className="text-yellow-400 mb-4 text-3xl"><Newspaper size={32} /></div>
-          <h3 className="text-xl font-bold text-white mb-2">Actualités</h3>
-          <p className="text-gray-400">Ajouter et gérer les actualités</p>
+          <h3 className="text-xl font-bold text-white mb-2">News</h3>
+          <p className="text-gray-400">Add and manage news</p>
         </button>
         <button onClick={() => setCurrentPage('admin-aerial')} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2">
           <div className="text-yellow-400 mb-4 text-3xl"><Camera size={32} /></div>
-          <h3 className="text-xl font-bold text-white mb-2">Vues Aériennes</h3>
-          <p className="text-gray-400">Gérer les photos aériennes</p>
+          <h3 className="text-xl font-bold text-white mb-2">Aerial Views</h3>
+          <p className="text-gray-400">Manage photos</p>
         </button>
         <button onClick={() => setCurrentPage('admin-articles')} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl hover:shadow-yellow-400/20 transition-all transform hover:-translate-y-2">
           <div className="text-yellow-400 mb-4 text-3xl"><Pencil size={32} /></div>
           <h3 className="text-xl font-bold text-white mb-2">Articles</h3>
-          <p className="text-gray-400">Rédiger et gérer les articles</p>
+          <p className="text-gray-400">Write and manage articles</p>
         </button>
+      </div>
+    </div>
+  );
+
+  const AdminMap = () => (
+    <div className="px-4 max-w-7xl mx-auto">
+      <h1 className="text-4xl font-bold text-white mb-6">Manage Map Annotations</h1>
+      <div className="bg-gray-800 p-6 rounded-lg">
+        <p className="text-gray-300">Map annotation management feature coming soon...</p>
       </div>
     </div>
   );
@@ -623,53 +607,75 @@ disneyLayer.addTo(map);
     const [newDate, setNewDate] = useState('');
     const [newTweet, setNewTweet] = useState('');
     const [newContent, setNewContent] = useState('');
+    const [editingId, setEditingId] = useState(null);
 
-    const addNews = () => {
+    const saveNews = () => {
       if (!newTitle || !newContent) {
-        alert('Veuillez remplir le titre et le contenu');
+        alert('Please fill in title and content');
         return;
       }
-      setNews([{ id: Date.now(), title: newTitle, date: newDate || new Date().toISOString().split('T')[0], tweet: newTweet, content: newContent }, ...news]);
+      if (editingId) {
+        setNews(news.map(n => n.id === editingId ? { ...n, title: newTitle, date: newDate || n.date, tweet: newTweet, content: newContent } : n));
+        setEditingId(null);
+      } else {
+        setNews([{ id: Date.now(), title: newTitle, date: newDate || new Date().toISOString().split('T')[0], tweet: newTweet, content: newContent }, ...news]);
+      }
       setNewTitle('');
       setNewDate('');
       setNewTweet('');
       setNewContent('');
-      alert('Actualité ajoutée !');
+      alert(editingId ? 'News updated!' : 'News added!');
     };
 
     const deleteNews = (id) => {
-      if (window.confirm('Supprimer cette actualité ?')) {
+      if (window.confirm('Delete this news item?')) {
         setNews(news.filter(n => n.id !== id));
       }
     };
 
+    const startEdit = (item) => {
+      setEditingId(item.id);
+      setNewTitle(item.title);
+      setNewDate(item.date);
+      setNewTweet(item.tweet || '');
+      setNewContent(item.content);
+    };
+
     return (
       <div className="px-4 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-6">Gestion des Actualités</h1>
+        <h1 className="text-4xl font-bold text-white mb-6">Manage News</h1>
         <div className="bg-gray-800 p-6 rounded-lg space-y-4 mb-8">
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ajouter une actualité</h2>
-          <input type="text" placeholder="Titre *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">{editingId ? 'Edit News' : 'Add News'}</h2>
+          <input type="text" placeholder="Title *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
           <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <input type="text" placeholder="Lien tweet (ID)" value={newTweet} onChange={(e) => setNewTweet(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <textarea placeholder="Contenu *" value={newContent} onChange={(e) => setNewContent(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-32 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <button onClick={addNews} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold">
-            <Plus size={20} className="mr-2" />
-            Ajouter
-          </button>
+          <input type="text" placeholder="Tweet ID" value={newTweet} onChange={(e) => setNewTweet(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <textarea placeholder="Content *" value={newContent} onChange={(e) => setNewContent(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-32 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <div className="flex gap-2">
+            <button onClick={saveNews} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold">
+              <Plus size={20} className="mr-2" />
+              {editingId ? 'Update' : 'Add'}
+            </button>
+            {editingId && <button onClick={() => { setEditingId(null); setNewTitle(''); setNewDate(''); setNewTweet(''); setNewContent(''); }} className="bg-gray-600 text-white px-6 py-3 rounded-lg font-bold">Cancel</button>}
+          </div>
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-white mb-4">Actualités existantes</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Existing News</h2>
           {news.map(item => (
             <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-xl flex justify-between items-start">
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-yellow-400">{item.title}</h3>
                 <p className="text-gray-400 mb-2">{item.date}</p>
-                <p className="text-gray-300 mb-2">{item.content}</p>
+                <p className="text-gray-300">{item.content.substring(0, 100)}...</p>
               </div>
-              <button onClick={() => deleteNews(item.id)} className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors">
-                <Trash2 size={20} />
-              </button>
+              <div className="flex space-x-2 ml-4">
+                <button onClick={() => startEdit(item)} className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors">
+                  <Edit size={20} />
+                </button>
+                <button onClick={() => deleteNews(item.id)} className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors">
+                  <Trash2 size={20} />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -681,31 +687,73 @@ disneyLayer.addTo(map);
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
     const [newImage, setNewImage] = useState('');
+    const [editingId, setEditingId] = useState(null);
 
-    const addAerial = () => {
+    const saveAerial = () => {
       if (!newTitle || !newImage) {
-        alert('Veuillez remplir le titre et l\'image');
+        alert('Please fill in title and image URL');
         return;
       }
-      setArticles([...articles]);
+      if (editingId) {
+        setAerialViews(aerialViews.map(a => a.id === editingId ? { ...a, title: newTitle, date: newDate || a.date, image: newImage } : a));
+        setEditingId(null);
+      } else {
+        setAerialViews([{ id: Date.now(), title: newTitle, date: newDate || new Date().toISOString().split('T')[0], image: newImage }, ...aerialViews]);
+      }
       setNewTitle('');
       setNewDate('');
       setNewImage('');
-      alert('Photo ajoutée !');
+      alert(editingId ? 'Photo updated!' : 'Photo added!');
+    };
+
+    const deleteAerial = (id) => {
+      if (window.confirm('Delete this photo?')) {
+        setAerialViews(aerialViews.filter(a => a.id !== id));
+      }
+    };
+
+    const startEdit = (item) => {
+      setEditingId(item.id);
+      setNewTitle(item.title);
+      setNewDate(item.date);
+      setNewImage(item.image);
     };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-6">Gestion des Vues Aériennes</h1>
+        <h1 className="text-4xl font-bold text-white mb-6">Manage Aerial Views</h1>
         <div className="bg-gray-800 p-6 rounded-lg space-y-4 mb-8">
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ajouter une photo</h2>
-          <input type="text" placeholder="Titre *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">{editingId ? 'Edit Photo' : 'Add Photo'}</h2>
+          <input type="text" placeholder="Title *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
           <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <input type="url" placeholder="URL image *" value={newImage} onChange={(e) => setNewImage(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <button onClick={addAerial} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold w-full justify-center">
-            <Plus size={20} className="mr-2" />
-            Ajouter
-          </button>
+          <input type="url" placeholder="Image URL *" value={newImage} onChange={(e) => setNewImage(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <div className="flex gap-2">
+            <button onClick={saveAerial} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold">
+              <Plus size={20} className="mr-2" />
+              {editingId ? 'Update' : 'Add'}
+            </button>
+            {editingId && <button onClick={() => { setEditingId(null); setNewTitle(''); setNewDate(''); setNewImage(''); }} className="bg-gray-600 text-white px-6 py-3 rounded-lg font-bold">Cancel</button>}
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {aerialViews.map(item => (
+            <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black rounded-lg shadow-xl overflow-hidden">
+              <img src={item.image} alt={item.title} className="w-full h-48 object-cover" />
+              <div className="p-4">
+                <h3 className="text-lg font-bold text-yellow-400">{item.title}</h3>
+                <p className="text-gray-400 text-sm mb-3">{item.date}</p>
+                <div className="flex space-x-2">
+                  <button onClick={() => startEdit(item)} className="flex-1 p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors">
+                    <Edit size={18} />
+                  </button>
+                  <button onClick={() => deleteAerial(item.id)} className="flex-1 p-2 bg-red-600 rounded hover:bg-red-700 transition-colors">
+                    <Trash2 size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -713,33 +761,148 @@ disneyLayer.addTo(map);
 
   const AdminArticles = () => {
     const [newTitle, setNewTitle] = useState('');
+    const [newDate, setNewDate] = useState('');
     const [newContent, setNewContent] = useState('');
+    const [newFullContent, setNewFullContent] = useState('');
     const [newImage, setNewImage] = useState('');
+    const [editingId, setEditingId] = useState(null);
 
-    const addArticle = () => {
-      if (!newTitle || !newContent) {
-        alert('Veuillez remplir le titre et le contenu');
+    const applyFormatting = (tag) => {
+      const textarea = document.getElementById('fullContentTextarea');
+      if (!textarea) return;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = newFullContent.substring(start, end);
+      
+      if (!selectedText) {
+        alert('Please select text to format');
         return;
       }
-      setArticles([{ id: Date.now(), title: newTitle, date: new Date().toISOString().split('T')[0], content: newContent, image: newImage, fullContent: newContent }, ...articles]);
+
+      let formattedText = '';
+      switch(tag) {
+        case 'bold': formattedText = `<strong>${selectedText}</strong>`; break;
+        case 'italic': formattedText = `<em>${selectedText}</em>`; break;
+        case 'underline': formattedText = `<u>${selectedText}</u>`; break;
+        case 'h2': formattedText = `<h2 class="text-3xl font-bold text-yellow-400 my-4">${selectedText}</h2>`; break;
+        case 'h3': formattedText = `<h3 class="text-2xl font-bold text-yellow-300 my-3">${selectedText}</h3>`; break;
+        default: formattedText = selectedText;
+      }
+
+      const newText = newFullContent.substring(0, start) + formattedText + newFullContent.substring(end);
+      setNewFullContent(newText);
+    };
+
+    const applyColor = (color) => {
+      const textarea = document.getElementById('fullContentTextarea');
+      if (!textarea) return;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = newFullContent.substring(start, end);
+      
+      if (!selectedText) {
+        alert('Please select text to color');
+        return;
+      }
+
+      const formattedText = `<span style="color: ${color}">${selectedText}</span>`;
+      const newText = newFullContent.substring(0, start) + formattedText + newFullContent.substring(end);
+      setNewFullContent(newText);
+    };
+
+    const saveArticle = () => {
+      if (!newTitle || !newContent) {
+        alert('Please fill in title and content');
+        return;
+      }
+      if (editingId) {
+        setArticles(articles.map(a => a.id === editingId ? { ...a, title: newTitle, date: newDate || a.date, content: newContent, fullContent: newFullContent || newContent, image: newImage } : a));
+        setEditingId(null);
+      } else {
+        setArticles([{ id: Date.now(), title: newTitle, date: newDate || new Date().toISOString().split('T')[0], content: newContent, fullContent: newFullContent || newContent, image: newImage }, ...articles]);
+      }
       setNewTitle('');
+      setNewDate('');
       setNewContent('');
+      setNewFullContent('');
       setNewImage('');
-      alert('Article ajouté !');
+      alert(editingId ? 'Article updated!' : 'Article added!');
+    };
+
+    const deleteArticle = (id) => {
+      if (window.confirm('Delete this article?')) {
+        setArticles(articles.filter(a => a.id !== id));
+      }
+    };
+
+    const startEdit = (item) => {
+      setEditingId(item.id);
+      setNewTitle(item.title);
+      setNewDate(item.date);
+      setNewContent(item.content);
+      setNewFullContent(item.fullContent || item.content);
+      setNewImage(item.image || '');
     };
 
     return (
       <div className="px-4 max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-6">Gestion des Articles</h1>
+        <h1 className="text-4xl font-bold text-white mb-6">Manage Articles</h1>
         <div className="bg-gray-800 p-6 rounded-lg space-y-4 mb-8">
-          <h2 className="text-2xl font-bold text-yellow-400 mb-4">Ajouter un article</h2>
-          <input type="text" placeholder="Titre *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <input type="url" placeholder="URL image" value={newImage} onChange={(e) => setNewImage(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <textarea placeholder="Contenu *" value={newContent} onChange={(e) => setNewContent(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-32 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
-          <button onClick={addArticle} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold w-full justify-center">
-            <Plus size={20} className="mr-2" />
-            Ajouter
-          </button>
+          <h2 className="text-2xl font-bold text-yellow-400 mb-4">{editingId ? 'Edit Article' : 'Add Article'}</h2>
+          <input type="text" placeholder="Title *" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <input type="date" value={newDate} onChange={(e) => setNewDate(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <input type="url" placeholder="Cover image URL" value={newImage} onChange={(e) => setNewImage(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          <textarea placeholder="Short summary *" value={newContent} onChange={(e) => setNewContent(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-24 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+          
+          <div className="bg-gray-900 p-3 rounded-lg">
+            <p className="text-yellow-400 text-sm mb-2">Formatting tools:</p>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={() => applyFormatting('bold')} className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 font-bold text-sm">B</button>
+              <button type="button" onClick={() => applyFormatting('italic')} className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 italic text-sm">I</button>
+              <button type="button" onClick={() => applyFormatting('underline')} className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 underline text-sm">U</button>
+              <button type="button" onClick={() => applyFormatting('h2')} className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm font-bold">H2</button>
+              <button type="button" onClick={() => applyFormatting('h3')} className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 text-sm font-bold">H3</button>
+              <button type="button" onClick={() => applyColor('#f59e0b')} className="w-8 h-8 rounded" style={{ backgroundColor: '#f59e0b' }} title="Yellow" />
+              <button type="button" onClick={() => applyColor('#ef4444')} className="w-8 h-8 rounded" style={{ backgroundColor: '#ef4444' }} title="Red" />
+              <button type="button" onClick={() => applyColor('#3b82f6')} className="w-8 h-8 rounded" style={{ backgroundColor: '#3b82f6' }} title="Blue" />
+              <button type="button" onClick={() => applyColor('#10b981')} className="w-8 h-8 rounded" style={{ backgroundColor: '#10b981' }} title="Green" />
+            </div>
+          </div>
+
+          <textarea id="fullContentTextarea" placeholder="Full article content (use formatting tools above)" value={newFullContent} onChange={(e) => setNewFullContent(e.target.value)} className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-64 focus:outline-none focus:ring-2 focus:ring-yellow-400 font-mono text-sm" />
+          <p className="text-gray-400 text-xs">💡 You can also write HTML directly - Press Enter to create line breaks</p>
+          
+          <div className="flex gap-2">
+            <button onClick={saveArticle} className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold">
+              <Plus size={20} className="mr-2" />
+              {editingId ? 'Update' : 'Add'}
+            </button>
+            {editingId && <button onClick={() => { setEditingId(null); setNewTitle(''); setNewDate(''); setNewContent(''); setNewFullContent(''); setNewImage(''); }} className="bg-gray-600 text-white px-6 py-3 rounded-lg font-bold">Cancel</button>}
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-white mb-4">Existing Articles</h2>
+          {articles.map(item => (
+            <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black rounded-lg shadow-xl overflow-hidden">
+              <div className="flex flex-col md:flex-row">
+                {item.image && <img src={item.image} alt={item.title} className="w-full md:w-48 h-48 object-cover" />}
+                <div className="flex-1 p-6">
+                  <h3 className="text-xl font-bold text-yellow-400 mb-2">{item.title}</h3>
+                  <p className="text-gray-400 mb-3">{item.date}</p>
+                  <p className="text-gray-300 mb-4">{item.content.substring(0, 100)}...</p>
+                  <div className="flex space-x-2">
+                    <button onClick={() => startEdit(item)} className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors">
+                      <Edit size={20} />
+                    </button>
+                    <button onClick={() => deleteArticle(item.id)} className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors">
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
@@ -758,13 +921,14 @@ disneyLayer.addTo(map);
         {currentPage === 'contact' && <ContactPage />}
         {currentPage === 'login' && !isAdmin && <LoginPage username={username} setUsername={setUsername} password={password} setPassword={setPassword} onLogin={handleLogin} />}
         {currentPage === 'admin-dashboard' && isAdmin && <AdminDashboard />}
+        {currentPage === 'admin-map' && isAdmin && <AdminMap />}
         {currentPage === 'admin-news' && isAdmin && <AdminNews />}
         {currentPage === 'admin-aerial' && isAdmin && <AdminAerial />}
         {currentPage === 'admin-articles' && isAdmin && <AdminArticles />}
       </main>
       
       <footer className="bg-black border-t border-gray-800 py-8 text-center text-gray-400">
-        <p>&copy; 2025 DLP Works - Communauté de passionnés Disney</p>
+        <p>&copy; 2025 DLP Works - Community of Disney Fans</p>
       </footer>
     </div>
   );

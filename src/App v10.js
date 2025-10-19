@@ -204,15 +204,15 @@ const DLPWorksSite = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
 			<div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
-			<img 
+			  <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+				DLP Works
+			  </span>
+			  <img 
 				src="https://i.ibb.co/Z6q3W8Mv/LOGO-alphabackground.png" 
 				alt="DLP Works Logo" 
 				className="w-10 h-10 rounded-full object-cover shadow-lg" 
 				onError={(e) => e.target.style.display = 'none'} 
-			/>
-			  <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
-				DLP Works
-			  </span>
+			  />
 			</div>
           
           <div className="hidden md:flex space-x-6">

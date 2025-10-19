@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';import { Twitter as XIcon } from 'lucide-react';
+import { Menu, X, Facebook, Instagram, MapPin, Camera, Mail, User, Edit, Trash2, Plus, Youtube, Newspaper, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Twitter as XIcon } from 'lucide-react';
 
 // ===== COMPONENT AD BANNER =====
 const AdBanner = ({ slot = "test", format = "auto", isTest = true }) => {
@@ -145,8 +146,6 @@ const DLPWorksSite = () => {
   const [newsPage, setNewsPage] = useState(1);
   const [articlesPage, setArticlesPage] = useState(1);
   const ITEMS_PER_PAGE = 10;
-  const [mapHeight, setMapHeight] = useState(500);
-
 
   const ThreadsIcon = ({ size = 24, className = "" }) => (
     <svg width={size} height={size} viewBox="0 0 192 192" fill="currentColor" className={className}>
@@ -203,17 +202,11 @@ const DLPWorksSite = () => {
     <nav className="bg-black text-white fixed w-full top-0 z-50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-			<div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
-			<img 
-				src="https://i.ibb.co/Z6q3W8Mv/LOGO-alphabackground.png" 
-				alt="DLP Works Logo" 
-				className="w-10 h-10 rounded-full object-cover shadow-lg" 
-				onError={(e) => e.target.style.display = 'none'} 
-			/>
-			  <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
-				DLP Works
-			  </span>
-			</div>
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
+            <span className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+              DLP Works
+            </span>
+          </div>
           
           <div className="hidden md:flex space-x-6">
             <button onClick={() => setCurrentPage('home')} className={`hover:text-yellow-400 ${currentPage === 'home' ? 'text-yellow-400' : ''}`}>Home</button>
@@ -332,16 +325,8 @@ const DLPWorksSite = () => {
     );
   };
 
-const MapPage = () => {
-  const handleResize = (direction) => {
-    if (direction === 'up') {
-      setMapHeight(Math.min(mapHeight + 100, 1000));
-    } else {
-      setMapHeight(Math.max(mapHeight - 100, 300));
-    }
-  };
-
-  const mapHTML = `
+  const MapPage = () => {
+    const mapHTML = `
 <!doctype html>
 <html lang="en">
 <head>
@@ -356,7 +341,7 @@ const MapPage = () => {
 </head>
 <body>
 <div id="map"></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const TILE_ROOT = 'https://media.disneylandparis.com/mapTiles/images';
 const MIN_Z = 14;
@@ -391,50 +376,34 @@ const disneyLayer = L.tileLayer(\`\${TILE_ROOT}/{z}/{x}/{y}.jpg\`, {
 });
 
 disneyLayer.addTo(map);
-<\/script>
+</script>
 </body>
 </html>
-  `;
+    `;
 
-  return (
-    <div className="px-4 max-w-7xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
-        <MapPin className="mr-3 text-yellow-400" />
-        Interactive Map of Disneyland Paris
-      </h1>
-      
-      <AdBanner slot="4567890123" format="horizontal" isTest={true} />
-      
-      <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
-        <div className="flex gap-2 mb-4 justify-end">
-          <button 
-            onClick={() => handleResize('up')} 
-            className="p-2 bg-yellow-400 text-black rounded hover:bg-yellow-500 transition-colors"
-            title="Enlarge map"
-          >
-            <Maximize2 size={20} />
-          </button>
-          <button 
-            onClick={() => handleResize('down')} 
-            className="p-2 bg-yellow-400 text-black rounded hover:bg-yellow-500 transition-colors"
-            title="Shrink map"
-          >
-            <Minimize2 size={20} />
-          </button>
+    return (
+      <div className="px-4 max-w-7xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8 text-white flex items-center">
+          <MapPin className="mr-3 text-yellow-400" />
+          Interactive Map of Disneyland Paris
+        </h1>
+        
+        <AdBanner slot="4567890123" format="horizontal" isTest={true} />
+        
+        <div className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-2xl">
+          <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
+            <iframe
+              srcDoc={mapHTML}
+              style={{ width: '100%', height: '100%', border: 'none' }}
+              title="Interactive Map Disneyland Paris"
+            />
+          </div>
         </div>
-        <div className="bg-gray-800 rounded-lg overflow-hidden" style={{ height: `${mapHeight}px` }}>
-          <iframe
-            srcDoc={mapHTML}
-            style={{ width: '100%', height: '100%', border: 'none' }}
-            title="Interactive Map Disneyland Paris"
-          />
-        </div>
+        
+        <AdBanner slot="5678901234" format="auto" isTest={true} />
       </div>
-      
-      <AdBanner slot="5678901234" format="auto" isTest={true} />
-    </div>
-  );
-};
+    );
+  };
 
   const NewsPage = () => {
     const totalPages = Math.ceil(news.length / ITEMS_PER_PAGE);
@@ -644,185 +613,14 @@ disneyLayer.addTo(map);
     </div>
   );
 
-const [mapAnnotations, setMapAnnotations] = useState([
-  { id: 1, lat: 48.8722, lng: 2.7758, title: "Magic Kingdom", description: "The main park", type: "attraction", photo: null, tweetLink: null },
-]);
-
-	const AdminMap = () => {
-	  const [newTitle, setNewTitle] = useState('');
-	  const [newDescription, setNewDescription] = useState('');
-	  const [newLat, setNewLat] = useState('48.8722');
-	  const [newLng, setNewLng] = useState('2.7758');
-	  const [newType, setNewType] = useState('attraction');
-	  const [newPhoto, setNewPhoto] = useState('');
-	  const [newTweetLink, setNewTweetLink] = useState('');
-	  const [editingId, setEditingId] = useState(null);
-
-	  const saveAnnotation = () => {
-		if (!newTitle || !newLat || !newLng) {
-		  alert('Please fill in title, latitude, and longitude');
-		  return;
-		}
-		if (editingId) {
-		  setMapAnnotations(mapAnnotations.map(a => 
-			a.id === editingId 
-			  ? { ...a, title: newTitle, description: newDescription, lat: parseFloat(newLat), lng: parseFloat(newLng), type: newType, photo: newPhoto || null, tweetLink: newTweetLink || null } 
-			  : a
-		  ));
-		  setEditingId(null);
-		} else {
-		  setMapAnnotations([
-			{ id: Date.now(), title: newTitle, description: newDescription, lat: parseFloat(newLat), lng: parseFloat(newLng), type: newType, photo: newPhoto || null, tweetLink: newTweetLink || null }, 
-			...mapAnnotations
-		  ]);
-		}
-		setNewTitle('');
-		setNewDescription('');
-		setNewLat('48.8722');
-		setNewLng('2.7758');
-		setNewType('attraction');
-		setNewPhoto('');
-		setNewTweetLink('');
-		alert(editingId ? 'Annotation updated!' : 'Annotation added!');
-	  };
-
-	  const deleteAnnotation = (id) => {
-		if (window.confirm('Delete this annotation?')) {
-		  setMapAnnotations(mapAnnotations.filter(a => a.id !== id));
-		}
-	  };
-
-	  const startEdit = (item) => {
-		setEditingId(item.id);
-		setNewTitle(item.title);
-		setNewDescription(item.description);
-		setNewLat(item.lat.toString());
-		setNewLng(item.lng.toString());
-		setNewType(item.type);
-		setNewPhoto(item.photo || '');
-		setNewTweetLink(item.tweetLink || '');
-	  };
-
-	  return (
-		<div className="px-4 max-w-7xl mx-auto">
-		  <h1 className="text-4xl font-bold text-white mb-6">Manage Map Annotations</h1>
-		  <div className="bg-gray-800 p-6 rounded-lg space-y-4 mb-8">
-			<h2 className="text-2xl font-bold text-yellow-400 mb-4">{editingId ? 'Edit Annotation' : 'Add Annotation'}</h2>
-			<input 
-			  type="text" 
-			  placeholder="Title *" 
-			  value={newTitle} 
-			  onChange={(e) => setNewTitle(e.target.value)} 
-			  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			/>
-			<textarea 
-			  placeholder="Description" 
-			  value={newDescription} 
-			  onChange={(e) => setNewDescription(e.target.value)} 
-			  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg h-20 focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			/>
-			<div className="grid md:grid-cols-2 gap-4">
-			  <input 
-				type="number" 
-				placeholder="Latitude *" 
-				value={newLat} 
-				onChange={(e) => setNewLat(e.target.value)} 
-				step="0.0001" 
-				className="px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			  />
-			  <input 
-				type="number" 
-				placeholder="Longitude *" 
-				value={newLng} 
-				onChange={(e) => setNewLng(e.target.value)} 
-				step="0.0001" 
-				className="px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			  />
-			</div>
-			<select 
-			  value={newType} 
-			  onChange={(e) => setNewType(e.target.value)} 
-			  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
-			>
-			  <option value="attraction">Attraction</option>
-			  <option value="restaurant">Restaurant</option>
-			  <option value="shop">Shop</option>
-			  <option value="event">Event</option>
-			</select>
-			<input 
-			  type="url" 
-			  placeholder="Photo URL" 
-			  value={newPhoto} 
-			  onChange={(e) => setNewPhoto(e.target.value)} 
-			  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			/>
-			<input 
-			  type="url" 
-			  placeholder="Tweet Link" 
-			  value={newTweetLink} 
-			  onChange={(e) => setNewTweetLink(e.target.value)} 
-			  className="w-full px-4 py-2 bg-gray-900 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400" 
-			/>
-			<div className="flex gap-2">
-			  <button 
-				onClick={saveAnnotation} 
-				className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-6 py-3 rounded-lg flex items-center hover:shadow-lg font-bold"
-			  >
-				<Plus size={20} className="mr-2" />
-				{editingId ? 'Update' : 'Add'}
-			  </button>
-			  {editingId && (
-				<button 
-				  onClick={() => { 
-					setEditingId(null); 
-					setNewTitle(''); 
-					setNewDescription(''); 
-					setNewLat('48.8722'); 
-					setNewLng('2.7758'); 
-					setNewType('attraction'); 
-					setNewPhoto(''); 
-					setNewTweetLink(''); 
-				  }} 
-				  className="bg-gray-600 text-white px-6 py-3 rounded-lg font-bold"
-				>
-				  Cancel
-				</button>
-			  )}
-			</div>
-		  </div>
-
-		  <div className="space-y-4">
-			<h2 className="text-2xl font-bold text-white mb-4">Existing Annotations</h2>
-			{mapAnnotations.map(item => (
-			  <div key={item.id} className="bg-gradient-to-br from-gray-900 to-black p-6 rounded-lg shadow-xl flex justify-between items-start">
-				<div className="flex-1">
-				  <h3 className="text-xl font-bold text-yellow-400">{item.title}</h3>
-				  <p className="text-gray-400 text-sm mb-2">{item.lat.toFixed(4)}, {item.lng.toFixed(4)}</p>
-				  <p className="text-gray-300 text-sm mb-2">{item.description}</p>
-				  <p className="text-gray-400 text-xs">Type: {item.type}</p>
-				  {item.photo && <p className="text-gray-400 text-xs">Photo: {item.photo.substring(0, 50)}...</p>}
-				  {item.tweetLink && <p className="text-gray-400 text-xs">Tweet: {item.tweetLink}</p>}
-				</div>
-				<div className="flex space-x-2 ml-4">
-				  <button 
-					onClick={() => startEdit(item)} 
-					className="p-2 bg-gray-800 rounded hover:bg-yellow-400 hover:text-black transition-colors"
-				  >
-					<Edit size={20} />
-				  </button>
-				  <button 
-					onClick={() => deleteAnnotation(item.id)} 
-					className="p-2 bg-gray-800 rounded hover:bg-red-600 transition-colors"
-				  >
-					<Trash2 size={20} />
-				  </button>
-				</div>
-			  </div>
-			))}
-		  </div>
-		</div>
-	  );
-	};
+  const AdminMap = () => (
+    <div className="px-4 max-w-7xl mx-auto">
+      <h1 className="text-4xl font-bold text-white mb-6">Manage Map Annotations</h1>
+      <div className="bg-gray-800 p-6 rounded-lg">
+        <p className="text-gray-300">Map annotation management feature coming soon...</p>
+      </div>
+    </div>
+  );
 
   const AdminNews = () => {
     const [newTitle, setNewTitle] = useState('');

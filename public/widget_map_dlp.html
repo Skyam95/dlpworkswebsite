@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Widget – Plan interactif Disneyland Paris</title>
+  <!-- Leaflet CSS pour la carte interactive -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  <style>
+    html, body { 
+      margin:0; 
+      padding:0; 
+      height:100%; 
+      background:#e0e0e0; 
+      font-family: Arial, sans-serif;
+    }
+    #map { 
+      width:100%; 
+      height:100%; 
+    }
+    
+    /* Styles pour les popups des annotations */
+    .leaflet-popup-content-wrapper {
+      background-color: #1f2937 !important;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    
+    .leaflet-popup-content {
+      color: #ffffff;
+      margin: 0;
+      font-size: 14px;
+    }
+    
+    .leaflet-popup-content h3 {
+      margin: 0 0 8px 0;
+      color: #fbbf24;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .leaflet-popup-content p {
+      margin: 4px 0;
+      font-size: 13px;
+      color: #d1d5db;
+    }
+    
+    .leaflet-popup-content img {
+      max-width: 200px;
+      border-radius: 4px;
+      margin: 8px 0;
+    }
+    
+    .leaflet-popup-content a {
+      color: #fbbf24;
+      text-decoration: none;
+    }
+    
+    .leaflet-popup-content a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Style pour le conteneur de contrôle de zoom */
+    .leaflet-control-zoom {
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Style pour les boutons du contrôle */
+    .leaflet-control-zoom a {
+      background-color: #fbbf24;
+      color: #000;
+      font-weight: bold;
+    }
+    
+    .leaflet-control-zoom a:hover {
+      background-color: #f59e0b;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Conteneur de la carte -->
+<div id="map"></div>
+
+<!-- Leaflet JS pour les fonctionnalités de la carte -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  // ===== CONFIGURATION DE LA CARTE =====
+  // Paramètres de base : zoom min/max, centre, tuiles
+  const TILE_ROOT = 'https://media.disneylandparis.com/mapTiles/images';
+  const MIN_Z = 14;
+  const MAX_Z = 20;
+  const TILE_SIZE = 256;
+
+  // Initialisation de la carte Leaflet
+  const map = L.map('map', {
+    minZoom: MIN_Z,
+    maxZoom: MAX_Z,
+    center: [48.8722, 2.7758], // Coordonnées de Disneyland Paris
+    zoom: 16,
+    attributionControl: true
+  });
+
+  // ===== LIMITATION DES BOUNDS =====
+  // Limite le déplacement de la carte à la zone de Disneyland Paris
+  const southWest = L.latLng(48.85, 2.74);
+  const northEast = L.latLng(48.89, 2.81);
+  const bounds = L.latLngBounds(southWest, northEast);
+  map.setMaxBounds(bounds);
+
+  // ===== FALLBACK TILE =====
+  // Image de secours en cas de tuile manquante avec style Disney
+  const fallbackTile = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
+    <svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'>
+      <rect width='100%' height='100%' fill='#fdf6ff'/>
+      <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='20' fill='#a07acc' font-family='Verdana'>✨ Disney ✨</text>
+    </svg>`);
+
+  // ===== AJOUT DE LA COUCHE DE TUILES =====
+  // Couche de tuiles personnalisées de Disneyland Paris
+  const disneyLayer = L.tileLayer(`${TILE_ROOT}/{z}/{x}/{y}.jpg`, {
+    minZoom: MIN_Z,
+    maxZoom: MAX_Z,
+    tileSize: TILE_SIZE,
+    noWrap: true,
+    errorTileUrl: fallbackTile
+  });
+
+  disneyLayer.addTo(map);
+
+  // ===== DONNÉES DES ANNOTATIONS =====
+  // Tableau des annotations (attractions, restaurants, magasins, événements)
+  const annotations = [
+    {
+      lat: 48.8722,
+      lng: 2.7758,
+      title: "Magic Kingdom",
+      description: "Le parc principal de Disneyland Paris",
+      type: "attraction",
+      photo: null,
+      tweetLink: null
+    },
+    {
+      lat: 48.8702,
+      lng: 2.7758,
+      title: "Walt Disney Studios",
+      description: "Le parc des productions Disney et Hollywood",
+      type: "attraction",
+      photo: null,
+      tweetLink: null
+    }
+  ];
+
+  // ===== ICÔNES PERSONNALISÉES POUR LES ANNOTATIONS =====
+  // Crée des icônes différentes selon le type d'annotation
+  const typeIcons = {
+    attraction: {
+      color: '#fbbf24', // Jaune
+      icon: '🎢'
+    },
+    restaurant: {
+      color: '#f87171', // Rouge
+      icon: '🍽️'
+    },
+    shop: {
+      color: '#60a5fa', // Bleu
+      icon: '🛍️'
+    },
+    event: {
+      color: '#34d399', // Vert
+      icon: '🎪'
+    }
+  };
+
+  // ===== FONCTION POUR CRÉER DES MARQUEURS PERSONNALISÉS =====
+  // Crée un marqueur avec une icône HTML personnalisée selon le type
+  function createCustomIcon(type) {
+    const iconConfig = typeIcons[type] || typeIcons.attraction;
+    
+    const html = `
+      <div style="
+        background-color: ${iconConfig.color};
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        border: 3px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      ">
+        ${iconConfig.icon}
+      </div>
+    `;
+
+    return L.divIcon({
+      html: html,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor: [0, -20],
+      className: 'custom-icon'
+    });
+  }
+
+  // ===== FONCTION POUR AFFICHER LES POPUPS =====
+  // Crée le contenu HTML du popup pour chaque annotation
+  function createPopupContent(annotation) {
+    let content = `
+      <h3>${annotation.title}</h3>
+      <p><strong>Type:</strong> ${annotation.type}</p>
+      <p>${annotation.description}</p>
+    `;
+
+    if (annotation.photo) {
+      content += `<img src="${annotation.photo}" alt="${annotation.title}" />`;
+    }
+
+    if (annotation.tweetLink) {
+      content += `<p><a href="${annotation.tweetLink}" target="_blank">Voir le tweet</a></p>`;
+    }
+
+    return content;
+  }
+
+  // ===== AJOUT DES MARQUEURS À LA CARTE =====
+  // Parcourt les annotations et ajoute un marqueur pour chacune
+  const markers = [];
+  annotations.forEach(annotation => {
+    const marker = L.marker([annotation.lat, annotation.lng], {
+      icon: createCustomIcon(annotation.type)
+    }).addTo(map);
+
+    // Création du popup avec les informations de l'annotation
+    marker.bindPopup(createPopupContent(annotation), {
+      maxWidth: 250,
+      className: 'custom-popup'
+    });
+
+    markers.push(marker);
+  });
+
+  // ===== INTERACTION AU CLIC SUR LA CARTE =====
+  // Affiche les coordonnées du clic pour faciliter l'ajout de nouvelles annotations
+  map.on('click', function(e) {
+    console.log(`Latitude: ${e.latlng.lat.toFixed(4)}, Longitude: ${e.latlng.lng.toFixed(4)}`);
+  });
+
+</script>
+
+</body>
+</html>
